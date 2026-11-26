@@ -1,19 +1,29 @@
 # magpie-free-pool
 
-把 4 个**免注册、免 key、免实名、免绑卡**的 OpenAI 兼容端点塞进 magpie 模型池，并带一个**每小时自动健康检测**：失效模型自动剔除，新上架的免费模型自动接入。
+把 **免注册、免 key、免实名、免绑卡** 的 OpenAI 兼容端点塞进 magpie 模型池，并带一个**每小时自动健康检测**：失效模型自动剔除，新上架的免费模型自动接入。
 
 架构参考 [chengaopan/AutoMergePublicNodes](https://github.com/chengaopan/AutoMergePublicNodes) 的「多源抓取 → 归一化 → 去重 → 校验 → 定时产物 → CI 提交」流水线；区别在于判活标准是**真发一次 chat 看能不能回话**，而不是只看 TCP 通不通——`airforce`、`inference.net`、`chutes` 都是 `/models` 200 但 chat 401/402 的反例。
 
-## 四个匿名端点
+## 三个默认端点
 
 | provider id | base URL | 模型规模 | 匿名限制 |
 | --- | --- | --- | --- |
 | `kilo-free` | `https://api.kilo.ai/api/gateway` | ~460 个，19 个标 `isFree` | ~200 请求/小时/IP |
 | `llm7-free` | `https://api.llm7.io/v1` | ~74 个，`tier=turbo` 匿名可用 | 未公布 |
 | `pollinations-free` | `https://text.pollinations.ai/openai` | 1 个（gpt-oss-20b） | 同 IP 1 并发、间隔 ≥45s、100 次/天 |
-| `ovh-free` | `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1` | ~26 个（过滤 tts 后） | ~2 请求/分钟/IP/模型，年度额度易耗尽 |
 
-四个端点都不校验 `Authorization`，插件用占位 key `anonymous`。
+三个端点都不校验 `Authorization`，插件用占位 key `anonymous`。
+
+### OVH 默认关闭
+
+`ovh-free` 从 2026-11-27 起匿名调用返回 **403 authentication failed**，要求自备 OAuth token（`https://kepler.ai.cloud.ovh.net/v1/oauth/ovh/authorize`）。纯匿名已不可用，所以**默认不注册**，避免在 magpie 里点到就报错。
+
+需要时打开：
+
+```sh
+magpie plugin options github:cat-clash/magpie-free-pool '{"enableOvh":true}'
+echo anonymous | magpie plugin login ovh-free
+```
 
 ## 安装
 
@@ -22,7 +32,6 @@ magpie plugin add github:cat-clash/magpie-free-pool
 echo anonymous | magpie plugin login kilo-free
 echo anonymous | magpie plugin login llm7-free
 echo anonymous | magpie plugin login pollinations-free
-echo anonymous | magpie plugin login ovh-free
 magpie plugin list
 ```
 

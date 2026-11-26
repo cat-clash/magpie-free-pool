@@ -62,6 +62,10 @@ export const SPECS = [
   {
     id: 'ovh-free',
     name: 'OVH Free',
+    // 2026-11-27 起匿名调用返回 403 "authentication failed, generate a new token at
+    // https://kepler.ai.cloud.ovh.net/v1/oauth/ovh/authorize"——纯匿名已不可用。
+    // 默认不注册，避免用户在 magpie 里点到就报错；需要时把 options.enableOvh 设为 true。
+    defaultDisabled: true,
     api: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
     baseUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
     modelsUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models',
@@ -111,8 +115,14 @@ function modelsFromSnapshot(snapshot, spec, { now = Date.now(), staleMs = STALE_
   return out
 }
 
-function seedModels(spec) {
-  return Object.fromEntries(
+// 该源在快照里被探过、但全部判死 → 说明现在真的不能用，不要再用 seed 顶替
+function hasOnlyDead(snapshot, spec) {
+  const entries = Object.entries(snapshot?.models ?? {}).filter(([, m]) => m.provider === spec.id)
+  if (entries.length === 0) return false // 从没探过：允许 seed 兜底
+  return entries.every(([, m]) => m.status === 'dead')
+}
+
+function seedModels(spec) {  return Object.fromEntries(
     Object.entries(spec.seedModels).map(([id, def]) => [id, { ...def }]),
   )
 }
@@ -156,8 +166,12 @@ export const FreePoolPlugin = async ({ client } = {}, options = {}) => ({
     for (const spec of SPECS) {
       // 用户自定义优先，绝不覆盖
       if (cfg.provider[spec.id]) continue
+      // 默认关闭的源（如 OVH：匿名已 403 需 OAuth）不注册，除非显式打开
+      if (spec.defaultDisabled && options.enableOvh !== true) continue
       const dynamic = snapshot ? modelsFromSnapshot(snapshot, spec) : {}
       const models = Object.keys(dynamic).length ? dynamic : seedModels(spec)
+      // 快照里有该源但全被判死（且不是缺少快照的情况）→ 不再用 seed 顶替，避免"点了就报错"
+      if (snapshot && !Object.keys(dynamic).length && hasOnlyDead(snapshot, spec)) continue
       cfg.provider[spec.id] = {
         name: spec.name,
         npm: '@ai-sdk/openai-compatible',

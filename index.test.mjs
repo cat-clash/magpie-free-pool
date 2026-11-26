@@ -32,12 +32,14 @@ const EXPECTED = [
   { id: 'kilo-free', name: 'Kilo Free', api: 'https://api.kilo.ai/api/gateway', models: ['kilo-auto/free', 'nvidia/nemotron-3.5-lightning:free', 'openrouter/free'] },
   { id: 'llm7-free', name: 'LLM7 Free', api: 'https://api.llm7.io/v1', models: ['turbo'] },
   { id: 'pollinations-free', name: 'Pollinations Free', api: 'https://text.pollinations.ai/openai', models: ['openai-fast'] },
-  { id: 'ovh-free', name: 'OVH Free', api: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1', models: ['gpt-oss-120b', 'Qwen3.8-27B'] },
 ]
+
+// OVH 匿名已 403（需 OAuth token），默认不注册；显式 enableOvh 时才出现
+const OVH = { id: 'ovh-free', name: 'OVH Free', api: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1', models: ['Olala-v1.0-mini-7A1B'] }
 
 // ------------------------------------------------------------------ index ----
 
-test('SPECS registers exactly four providers in config', async () => {
+test('SPECS registers the three usable providers by default', async () => {
   const plugin = await FreePoolPlugin()
   assert.equal(typeof plugin.config, 'function')
   const cfg = {}
@@ -52,6 +54,18 @@ test('SPECS registers exactly four providers in config', async () => {
   }
 })
 
+test('OVH is opt-in because anonymous access now returns 403', async () => {
+  const off = {}
+  await (await FreePoolPlugin()).config(off)
+  assert.equal(off.provider['ovh-free'], undefined, '默认不应注册 OVH')
+
+  const on = {}
+  await (await FreePoolPlugin({}, { enableOvh: true })).config(on)
+  assert.ok(on.provider['ovh-free'], 'enableOvh=true 时应注册')
+  assert.equal(on.provider['ovh-free'].name, OVH.name)
+  assert.ok(Object.keys(on.provider['ovh-free'].models).length > 0)
+})
+
 test('config uses ??= and preserves a user-supplied provider', async () => {
   const plugin = await FreePoolPlugin()
   const custom = { name: 'Mine', npm: '@ai-sdk/openai-compatible', api: 'http://localhost:1/v1', models: {} }
@@ -60,7 +74,6 @@ test('config uses ??= and preserves a user-supplied provider', async () => {
   assert.equal(cfg.provider['kilo-free'], custom)
   assert.ok(cfg.provider['llm7-free'])
   assert.ok(cfg.provider['pollinations-free'])
-  assert.ok(cfg.provider['ovh-free'])
 })
 
 test('the four auth hooks expose one provider id each', async () => {

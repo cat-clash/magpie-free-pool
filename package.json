@@ -1,10 +1,10 @@
 {
   "name": "magpie-free-pool",
-  "version": "0.3.0",
-  "description": "免注册/免 key/免实名的免费 LLM API 池：kilo、llm7、pollinations、OVH 四个匿名 OpenAI 兼容端点 + 每小时自动健康检测（剔除失效模型、接入新模型）",
+  "version": "0.4.0",
+  "description": "免注册/免 key/免实名的免费 LLM API 池：kilo、llm7、pollinations 三个匿名 OpenAI 兼容端点 + 每小时自动健康检测（剔除失效模型、接入新模型）",
   "type": "module",
   "exports": { ".": "./index.mjs" },
-  "files": ["index.mjs", "health.mjs", "polling.mjs", "free_pool_snapshot.json", "README.md", "LICENSE"],
+  "files": ["index.mjs", "health.mjs", "polling.mjs", "free_pool_snapshot.json", "README.md", "LICENSE", "docs"],
   "scripts": {
     "test": "node --test",
     "health": "node polling.mjs --once",
@@ -13,7 +13,16 @@
   "magpie": {
     "icon": "https://cdn.simpleicons.org/openai",
     "options": {
-      "anonymousKey": { "type": "string", "title": "匿名端点使用的占位 key", "default": "anonymous" }
+      "anonymousKey": {
+        "type": "string",
+        "title": "匿名端点使用的占位 key",
+        "default": "anonymous"
+      },
+      "enableOvh": {
+        "type": "boolean",
+        "title": "启用 OVH 端点（匿名已 403，需自备 OAuth token）",
+        "default": false
+      }
     }
   },
   "keywords": ["magpie", "provider", "free", "anonymous", "openai-compatible", "kilo", "llm7", "pollinations", "ovh"],

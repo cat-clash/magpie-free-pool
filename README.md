@@ -53,13 +53,25 @@ node polling.mjs --serve                   # GET /health, POST /refresh
 
 Node 原生 `fetch` 和 bun **都不读** `HTTPS_PROXY`。中国大陆直连这些海外端点会 `ECONNRESET`（约 5 秒断开），看起来像"全部端点挂了"。`health.mjs` 自带 `createProxyFetch()`：CONNECT 隧道 + TLS，自动读环境变量，也支持 `--proxy http://127.0.0.1:7897`。GitHub Actions 的 runner 在海外，直连无需代理。
 
+## 质量感知与容错
+
+每小时探测不只看"能不能连"，还记录三样东西，写进快照供排序使用：
+
+| 字段 | 含义 |
+| --- | --- |
+| `quality` | 0–1 分。真回了话是及格线，`1000ms` 内接近 1，`10s` 接近 0，空回复固定 0.4 |
+| `category` | 失败归类：`ok` / `rate_limit`(429) / `auth`(401,403) / `payment`(402) / `server`(5xx) / `network`(连不上) / `http` |
+| `health.latencyMs` | 本轮实测延迟，用于观察端点是否在变慢 |
+
+**候选排序**（`selectCandidates`）：新出现的免费模型 → 上轮质量高的模型按分数从高到低复检 → 付费模型。每小时额度先花在"没试过的"和"上轮最好的"上，而不是每次按字母序打同一批。
+
+**代理回退**：`makeFetch` 会先探一下代理端口（`proxyAlive`，1.5s 超时）。代理挂了就自动退回直连，并在日志里打 `WARNING 代理端口不可达，已回退直连`——避免把"代理挂了"误判成"所有端点都死了"（这是本地实测踩过的坑）。
+
 ## 测试
 
 ```sh
-node --test    # 17 个用例，全程 mock fetch
+node --test    # 26 个用例，全程 mock fetch，不访问外网
 ```
-
-覆盖：三种 `/models` 结构归一化、`isFree` 优先级、`tier=turbo` 匿名判定、429/401/402/网络错误分类、连续失败阈值剔除、恢复、快照原子读写、代理传输选择。
 
 ## 与 AutoMergePublicNodes 的对应
 

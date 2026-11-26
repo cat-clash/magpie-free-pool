@@ -1,6 +1,6 @@
 {
   "name": "magpie-free-pool",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "免注册/免 key/免实名的免费 LLM API 池：kilo、llm7、pollinations、OVH 四个匿名 OpenAI 兼容端点 + 每小时自动健康检测（剔除失效模型、接入新模型）",
   "type": "module",
   "exports": { ".": "./index.mjs" },

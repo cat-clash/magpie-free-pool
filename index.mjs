@@ -67,8 +67,9 @@ export const SPECS = [
     modelsUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models',
     modelFormat: 'openrouter',
     note: 'OVHcloud Kepler 匿名端点；~2 RPM/IP/model，年度匿名额度易耗尽。额度耗尽返回 429，需 OAuth token 的模型返回 403。',
-    // 限流按"每请求递增"计（实测第 1 个 200、第 2 个起 429），所以每轮只探 2 个
-    maxProbesPerRound: 2,
+    // 限流按"每请求递增"计（实测第 1 个 200、第 2 个起 429）。但配额太小会让僵尸记录
+    // 永远轮不到探测（旧快照里的 dead/suspect 会被永久保留），所以每轮要能覆盖全部种子。
+    maxProbesPerRound: 4,
     // 种子必须写实测能过的模型：gpt-oss-120b / Qwen3.8-27B 在 2026-11-27 已是 429 额度耗尽，
     // 写它们会导致快照缺失时 magpie 里全是"点了就报错"的模型。以下是实测 200 的。
     seedModels: {
@@ -86,11 +87,17 @@ function specById(id) {
 }
 
 // 从快照构造某 provider 的 models 表；过滤掉带 provider 前缀以外的项
-function modelsFromSnapshot(snapshot, spec) {
+// 快照里超过这么久没被复检的模型不再暴露。免费端点的可用性按小时变，
+// 一条 8 小时前的 alive 记录很可能已经 429/403——与其让用户点了报错，不如先藏起来。
+export const STALE_MS = 6 * 60 * 60 * 1000
+
+function modelsFromSnapshot(snapshot, spec, { now = Date.now(), staleMs = STALE_MS } = {}) {
   const out = {}
   for (const [fullId, m] of aliveModelIds(snapshot)) {
     if (m.provider !== spec.id) continue
-    // 去掉 provider 前缀，magpie 里模型 id 是 kilo-free/xxx 中的 xxx 部分由 provider 拼接
+    // 陈旧记录不暴露：checkedAt 太老的模型不再进模型表
+    const checked = Date.parse(m.health?.checkedAt ?? '')
+    if (Number.isFinite(checked) && now - checked > staleMs) continue
     const prefix = `${spec.id}/`
     const shortId = fullId.startsWith(prefix) ? fullId.slice(prefix.length) : fullId
     out[shortId] = {

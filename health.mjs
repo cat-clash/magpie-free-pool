@@ -462,14 +462,26 @@ function priorQuality(prev, id) {
  * 候选排序：新模型优先 → 已知高质量模型 → 已知低质量 → 付费。
  * 这样每小时有限额度先花在"没试过的"和"上轮最好的"上。
  */
-export function selectCandidates(unique, prev, maxProbes) {
+// 一条记录超过这么久没复检就算陈旧：优先重探，且不再对外暴露（见 index.mjs 的 STALE_MS）
+export const STALE_MS = 6 * 60 * 60 * 1000
+
+export function selectCandidates(unique, prev, maxProbes, { now = Date.now(), staleMs = STALE_MS } = {}) {
+  const checkedAt = (m) => {
+    const t = Date.parse(prev?.models?.[m.id]?.health?.checkedAt ?? '')
+    return Number.isFinite(t) ? t : 0
+  }
+  const isStale = (m) => {
+    const t = checkedAt(m)
+    return t === 0 || now - t > staleMs
+  }
   const rank = (m) => {
     const known = Boolean(prev?.models?.[m.id])
     const paid = m.free === false
-    if (!known && !paid) return 0 // 新免费模型
-    if (known && !paid) return 1 // 复检，按质量排
-    if (!known && paid) return 2
-    return 3
+    if (known && isStale(m)) return 0 // 陈旧记录最优先重探：否则旧状态永远刷不掉
+    if (!known && !paid) return 1 // 新免费模型
+    if (known && !paid) return 2 // 近期复检过的
+    if (!known && paid) return 3
+    return 4
   }
   return unique
     .slice()
@@ -477,7 +489,11 @@ export function selectCandidates(unique, prev, maxProbes) {
       const ra = rank(a)
       const rb = rank(b)
       if (ra !== rb) return ra - rb
-      if (ra === 1) return priorQuality(prev, b.id) - priorQuality(prev, a.id) // 高质量先复检
+      if (ra === 2) {
+        // 同属"近期复检过"：最久没探的先探，保证轮转覆盖全集；同时间戳按 id 稳定排序
+        return checkedAt(a) - checkedAt(b) || String(a.id).localeCompare(String(b.id))
+      }
+      if (ra === 1) return priorQuality(prev, b.id) - priorQuality(prev, a.id) || String(a.id).localeCompare(String(b.id))
       return String(a.id).localeCompare(String(b.id))
     })
     .slice(0, maxProbes)

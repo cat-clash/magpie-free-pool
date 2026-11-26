@@ -414,11 +414,13 @@ test('probeModel: empty content is kept as alive but scored lower', async () => 
 
 // ------------------------------------------------ 新增：候选排序 ----
 
-test('selectCandidates: new free models first, then known by quality, paid last', () => {
+test('selectCandidates: new free models first, then recently checked, paid last', () => {
+  const now = Date.now()
+  const recent = new Date(now - 60_000).toISOString() // 1 分钟前刚探过
   const prev = {
     models: {
-      'a/known-fast': { quality: 0.95 },
-      'a/known-slow': { quality: 0.3 },
+      'a/known-fast': { quality: 0.95, health: { checkedAt: recent } },
+      'a/known-slow': { quality: 0.3, health: { checkedAt: recent } },
     },
   }
   const unique = [
@@ -427,8 +429,38 @@ test('selectCandidates: new free models first, then known by quality, paid last'
     { id: 'a/known-fast' },
     { id: 'a/new-one' },
   ]
-  const picked = selectCandidates(unique, prev, 10)
+  const picked = selectCandidates(unique, prev, 10, { now })
   assert.deepEqual(picked.map((m) => m.id), ['a/new-one', 'a/known-fast', 'a/known-slow', 'a/paid'])
+})
+
+test('selectCandidates: stale records jump the queue so old state gets refreshed', () => {
+  const now = Date.now()
+  const old = new Date(now - 8 * 60 * 60 * 1000).toISOString() // 8 小时前
+  const recent = new Date(now - 60_000).toISOString()
+  const prev = {
+    models: {
+      'a/stale': { quality: 0.9, health: { checkedAt: old } },
+      'a/fresh': { quality: 0.1, health: { checkedAt: recent } },
+    },
+  }
+  const unique = [{ id: 'a/stale' }, { id: 'a/fresh' }, { id: 'a/new-one' }]
+  const picked = selectCandidates(unique, prev, 3, { now })
+  assert.equal(picked[0].id, 'a/stale', '陈旧记录必须最先复探')
+})
+
+test('modelsFromSnapshot hides records that are stale', async () => {
+  const now = Date.now()
+  const snapshot = {
+    models: {
+      'kilo-free/fresh': { provider: 'kilo-free', status: 'alive', limit: { context: 8000 }, health: { checkedAt: new Date(now - 60_000).toISOString() } },
+      'kilo-free/stale': { provider: 'kilo-free', status: 'alive', limit: { context: 8000 }, health: { checkedAt: new Date(now - 8 * 60 * 60 * 1000).toISOString() } },
+    },
+  }
+  const cfg = {}
+  await (await FreePoolPlugin({}, { snapshot })).config(cfg)
+  const models = Object.keys(cfg.provider['kilo-free'].models)
+  assert.equal(models.includes('fresh'), true)
+  assert.equal(models.includes('stale'), false, '陈旧记录不应暴露给 magpie')
 })
 
 test('selectCandidates: respects maxProbes', () => {

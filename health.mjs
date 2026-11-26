@@ -33,6 +33,9 @@ export const DEFAULT_PROBE_TIMEOUT = 12000
 export const DEFAULT_FETCH_TIMEOUT = 25000
 // 连续失败达到该次数才把模型从池中移除（抗抖动）
 export const DEFAULT_DEAD_THRESHOLD = 2
+// 同一轮探测 / 抓 /models 的并发上限：实测本机代理在 4 路并发会断 TLS，
+// 2 路稳定，默认 2。
+export const DEFAULT_CONCURRENCY = 2
 // 最小探测请求
 export const PROBE_MESSAGES = [{ role: 'user', content: 'hi' }]
 export const PROBE_MAX_TOKENS = 8
@@ -416,6 +419,21 @@ function sha6(s) {
   return createHash('sha256').update(s).digest('hex').slice(0, 6)
 }
 
+// 并发受限的池：同时最多 limit 个任务。本机代理在 4 路并发抓 /models 时会断 TLS，
+// 串行/双路则稳定。探测阶段同样用这个限流。
+async function poolRun(items, limit, worker) {
+  const results = new Array(items.length)
+  let next = 0
+  async function run() {
+    while (next < items.length) {
+      const i = next++
+      results[i] = await worker(items[i])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run))
+  return results
+}
+
 // 去重：按 model.id；保留首次，后续记入 dup
 export function dedupeModels(models) {
   const seen = new Set()
@@ -479,6 +497,7 @@ export async function healthCheck(specs, opts = {}) {
     probeTimeout = DEFAULT_PROBE_TIMEOUT,
     deadThreshold = DEFAULT_DEAD_THRESHOLD,
     doFetch = fetch,
+    concurrency = DEFAULT_CONCURRENCY,
     now = new Date().toISOString(),
   } = opts
   const report = {
@@ -488,9 +507,13 @@ export async function healthCheck(specs, opts = {}) {
     models: {},
   }
 
-  // 阶段 1：并发抓所有源的 /models
-  const catalogs = await Promise.all(
-    specs.map(async (spec) => ({ spec, result: await fetchModels(spec, doFetch, fetchTimeout) })),
+  // 阶段 1：抓所有源的 /models。并发必须限流——实测本机代理（Clash 7897）在 4 路并发
+  // 抓 /models 时会直接断 TLS（"socket disconnected before secure TLS connection"），
+  // 串行则 4/4 成功。默认 2 路是稳定上限。
+  const catalogs = await poolRun(
+    specs,
+    Math.min(concurrency, specs.length),
+    async (spec) => ({ spec, result: await fetchModels(spec, doFetch, fetchTimeout) }),
   )
   const allModels = []
   for (const { spec, result } of catalogs) {
@@ -534,8 +557,10 @@ export async function healthCheck(specs, opts = {}) {
     thisRound.push(m)
   }
 
-  const probed = await Promise.all(
-    thisRound.map(async (m) => ({ m, health: await probeModel(m.provider ? specs.find((s) => s.id === m.provider) : null, m, doFetch, probeTimeout) })),
+  const probed = await poolRun(
+    thisRound,
+    Math.min(concurrency, thisRound.length),
+    async (m) => ({ m, health: await probeModel(m.provider ? specs.find((s) => s.id === m.provider) : null, m, doFetch, probeTimeout) }),
   )
   report.summary.probed = probed.length
 

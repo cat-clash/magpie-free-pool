@@ -1,15 +1,15 @@
 {
-  "checkedAt": "2026-11-26T17:30:08.065Z",
+  "checkedAt": "2026-11-26T17:31:59.118Z",
   "summary": {
     "sources": 4,
     "discovered": 565,
     "duplicates": 0,
-    "probed": 16,
-    "alive": 5,
-    "suspect": 4,
+    "probed": 24,
+    "alive": 15,
+    "suspect": 2,
     "dead": 7,
-    "removed": 7,
-    "pool": 17
+    "removed": 4,
+    "pool": 23
   },
   "sources": {
     "kilo-free": {
@@ -62,10 +62,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 4542,
+        "latencyMs": 1206,
         "returnedModel": "baidu/ernie-5.5-flash-preview:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/inclusionai/ling-3.2-flash:free": {
@@ -87,14 +87,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 3,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "rate-limited (429)",
-        "status": 429,
-        "latencyMs": 9993,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 1064,
+        "returnedModel": "inclusionai/ling-3.2-flash:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/kilo-auto/free": {
@@ -121,10 +123,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 5053,
+        "latencyMs": 1448,
         "returnedModel": "baidu/ernie-5.5-flash-preview:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/liquid/lfm-3-1.7b:free": {
@@ -145,14 +147,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5015,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 938,
+        "returnedModel": "liquid/lfm-3-1.7b:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
@@ -182,10 +186,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 11138,
+        "latencyMs": 528,
         "returnedModel": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free": {
@@ -206,14 +210,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5013,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 1746,
+        "returnedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/nvidia/nemotron-3.5-lightning:free": {
@@ -234,14 +240,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 4,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5015,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 578,
+        "returnedModel": "nvidia/nemotron-3.5-lightning:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/nvidia/nemotron-3.5-super-vl:free": {
@@ -264,14 +272,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 3,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5014,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 10114,
+        "returnedModel": "nvidia/nemotron-3.5-super-vl:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/openrouter/free": {
@@ -299,10 +309,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 3782,
-        "returnedModel": "liquid/lfm-3-1.7b:free",
+        "latencyMs": 1355,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/particle-ai/particle-1:free": {
@@ -324,14 +334,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 2,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5014,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 543,
+        "returnedModel": "particle-ai/particle-1:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/recursive/flint-v1.0:free": {
@@ -358,10 +370,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 6234,
+        "latencyMs": 827,
         "returnedModel": "recursive/flint-v1.0:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/reflection/beam-free": {
@@ -382,14 +394,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 2,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5014,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 762,
+        "returnedModel": "reflection/beam-free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "kilo-free/stealth/glyph-cluster": {
@@ -410,14 +424,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "dead",
-      "failures": 2,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5014,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 1550,
+        "returnedModel": "stealth/glyph-cluster",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "llm7-free/codestral-latest": {
@@ -438,14 +454,16 @@
         ]
       },
       "provider": "llm7-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5014,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 309,
+        "returnedModel": "codestral-latest",
+        "hasContent": true,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "llm7-free/gpt-oss:20b": {
@@ -466,14 +484,14 @@
         ]
       },
       "provider": "llm7-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "dead",
+      "failures": 2,
       "health": {
         "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5015,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "reason": "rate-limited (429) retry-after=10s",
+        "status": 429,
+        "latencyMs": 281,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "llm7-free/turbo": {
@@ -486,13 +504,13 @@
       "id": "llm7-free/turbo",
       "provider": "llm7-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
       "health": {
         "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5013,
-        "checkedAt": "2026-11-26T17:30:08.065Z"
+        "reason": "rate-limited (429) retry-after=10s",
+        "status": 429,
+        "latencyMs": 296,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "ovh-free/Olala-v1.0-mini-7A1B": {
@@ -513,14 +531,14 @@
         ]
       },
       "provider": "ovh-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "dead",
+      "failures": 2,
       "health": {
         "ok": false,
-        "reason": "probe ovh-free/Olala-v1.0-mini-7A1B timeout 12000ms",
-        "status": 0,
-        "latencyMs": 12000,
-        "checkedAt": "2026-11-26T17:26:48.764Z"
+        "reason": "rate-limited (429) retry-after=3047280s",
+        "status": 429,
+        "latencyMs": 514,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "ovh-free/Olala-v1.0-summarise": {
@@ -541,14 +559,187 @@
         ]
       },
       "provider": "ovh-free",
+      "status": "dead",
+      "failures": 2,
+      "health": {
+        "ok": false,
+        "reason": "rate-limited (429) retry-after=3047280s",
+        "status": 429,
+        "latencyMs": 516,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "ovh-free/Olala-v1.0-translate": {
+      "id": "ovh-free/Olala-v1.0-translate",
+      "name": "OVH Free · Olala-v1.0-translate",
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
       "status": "suspect",
       "failures": 1,
       "health": {
         "ok": false,
-        "reason": "Client network socket disconnected before secure TLS connection was established",
-        "status": 0,
-        "latencyMs": 5018,
-        "checkedAt": "2026-11-26T17:26:48.764Z"
+        "reason": "rate-limited (429) retry-after=3047280s",
+        "status": 429,
+        "latencyMs": 516,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "ovh-free/Qwen3Guard-Gen-0.6B": {
+      "id": "ovh-free/Qwen3Guard-Gen-0.6B",
+      "name": "OVH Free · Qwen3Guard-Gen-0.6B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "rate-limited (429) retry-after=3047280s",
+        "status": 429,
+        "latencyMs": 519,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "ovh-free/Qwen3Guard-Gen-8B": {
+      "id": "ovh-free/Qwen3Guard-Gen-8B",
+      "name": "OVH Free · Qwen3Guard-Gen-8B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 752,
+        "returnedModel": "Qwen3Guard-Gen-8B",
+        "hasContent": true,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "ovh-free/solaria-3": {
+      "id": "ovh-free/solaria-3",
+      "name": "OVH Free · solaria-3",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "dead",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "HTTP 404",
+        "status": 404,
+        "latencyMs": 502,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "ovh-free/stable-diffusion-xl-base-v10": {
+      "id": "ovh-free/stable-diffusion-xl-base-v10",
+      "name": "OVH Free · stable-diffusion-xl-base-v10",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "dead",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "HTTP 404",
+        "status": 404,
+        "latencyMs": 932,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
+      }
+    },
+    "kilo-free/~anthropic/claude-fable-latest": {
+      "id": "kilo-free/~anthropic/claude-fable-latest",
+      "name": "Kilo Free · Anthropic: Claude Fable Latest",
+      "limit": {
+        "context": 1000000,
+        "output": 128000
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file",
+          "pdf"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "auth 401",
+        "status": 401,
+        "latencyMs": 276,
+        "checkedAt": "2026-11-26T17:31:59.118Z"
       }
     },
     "ovh-free/gpt-oss-120b": {

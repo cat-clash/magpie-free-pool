@@ -1,12 +1,12 @@
 {
-  "checkedAt": "2026-11-26T17:33:54.689Z",
+  "checkedAt": "2026-11-26T17:36:19.547Z",
   "summary": {
     "sources": 4,
     "discovered": 565,
     "duplicates": 0,
     "probed": 24,
-    "alive": 11,
-    "suspect": 4,
+    "alive": 15,
+    "suspect": 0,
     "dead": 9,
     "removed": 9,
     "pool": 21
@@ -56,14 +56,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "rate-limited (429)",
-        "status": 429,
-        "latencyMs": 440,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 1831,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/inclusionai/ling-3.2-flash:free": {
@@ -85,14 +87,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "rate-limited (429)",
-        "status": 429,
-        "latencyMs": 697,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 997,
+        "returnedModel": "inclusionai/ling-3.2-flash:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/kilo-auto/free": {
@@ -119,10 +123,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 918,
-        "returnedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "latencyMs": 1541,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/liquid/lfm-3-1.7b:free": {
@@ -149,10 +153,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 500,
+        "latencyMs": 498,
         "returnedModel": "liquid/lfm-3-1.7b:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
@@ -176,14 +180,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "fetch failed",
-        "status": 0,
-        "latencyMs": 38,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 449,
+        "returnedModel": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free": {
@@ -210,10 +216,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 1333,
+        "latencyMs": 2652,
         "returnedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/nvidia/nemotron-3.5-lightning:free": {
@@ -240,10 +246,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 1044,
+        "latencyMs": 567,
         "returnedModel": "nvidia/nemotron-3.5-lightning:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/nvidia/nemotron-3.5-super-vl:free": {
@@ -272,10 +278,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 2138,
+        "latencyMs": 4845,
         "returnedModel": "nvidia/nemotron-3.5-super-vl:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/openrouter/free": {
@@ -301,12 +307,12 @@
       "failures": 0,
       "health": {
         "ok": true,
-        "reason": "ok (empty content)",
+        "reason": "ok",
         "status": 200,
-        "latencyMs": 2838,
-        "returnedModel": "nvidia/nemotron-3.5-super-vl:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 1507,
+        "returnedModel": "google/gemma-4-31b-it:free",
+        "hasContent": true,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/particle-ai/particle-1:free": {
@@ -328,14 +334,16 @@
         ]
       },
       "provider": "kilo-free",
-      "status": "suspect",
-      "failures": 1,
+      "status": "alive",
+      "failures": 0,
       "health": {
-        "ok": false,
-        "reason": "rate-limited (429)",
-        "status": 429,
-        "latencyMs": 407,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 579,
+        "returnedModel": "particle-ai/particle-1:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/recursive/flint-v1.0:free": {
@@ -362,10 +370,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 727,
+        "latencyMs": 1687,
         "returnedModel": "recursive/flint-v1.0:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/reflection/beam-free": {
@@ -392,10 +400,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 1215,
+        "latencyMs": 876,
         "returnedModel": "reflection/beam-free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/stealth/glyph-cluster": {
@@ -422,10 +430,10 @@
         "ok": true,
         "reason": "ok (empty content)",
         "status": 200,
-        "latencyMs": 1665,
+        "latencyMs": 1296,
         "returnedModel": "stealth/glyph-cluster",
         "hasContent": false,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "llm7-free/codestral-latest": {
@@ -452,10 +460,10 @@
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 213,
+        "latencyMs": 441,
         "returnedModel": "codestral-latest",
         "hasContent": true,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "llm7-free/gpt-oss:20b": {
@@ -477,13 +485,13 @@
       },
       "provider": "llm7-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=1s",
+        "reason": "rate-limited (429) retry-after=10s",
         "status": 429,
-        "latencyMs": 255,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 347,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "llm7-free/turbo": {
@@ -496,13 +504,13 @@
       "id": "llm7-free/turbo",
       "provider": "llm7-free",
       "status": "dead",
-      "failures": 5,
+      "failures": 6,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=10s",
+        "reason": "rate-limited (429) retry-after=1s",
         "status": 429,
-        "latencyMs": 239,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 469,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/Olala-v1.0-mini-7A1B": {
@@ -524,13 +532,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=3047164s",
+        "reason": "rate-limited (429) retry-after=3047019s",
         "status": 429,
-        "latencyMs": 807,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 948,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/Olala-v1.0-summarise": {
@@ -552,13 +560,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=3047164s",
+        "reason": "rate-limited (429) retry-after=3047019s",
         "status": 429,
-        "latencyMs": 821,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 951,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/Olala-v1.0-translate": {
@@ -580,13 +588,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 2,
+      "failures": 3,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=3047164s",
+        "reason": "rate-limited (429) retry-after=3047019s",
         "status": 429,
-        "latencyMs": 789,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 954,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/Qwen3Guard-Gen-0.6B": {
@@ -608,13 +616,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 2,
+      "failures": 3,
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=3047164s",
+        "reason": "rate-limited (429) retry-after=3047019s",
         "status": 429,
-        "latencyMs": 807,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 967,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/Qwen3Guard-Gen-8B": {
@@ -641,10 +649,10 @@
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1040,
+        "latencyMs": 1200,
         "returnedModel": "Qwen3Guard-Gen-8B",
         "hasContent": true,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/solaria-3": {
@@ -666,13 +674,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 2,
+      "failures": 3,
       "health": {
         "ok": false,
         "reason": "HTTP 404",
         "status": 404,
-        "latencyMs": 792,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 952,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/stable-diffusion-xl-base-v10": {
@@ -694,13 +702,13 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 2,
+      "failures": 3,
       "health": {
         "ok": false,
         "reason": "HTTP 404",
         "status": 404,
-        "latencyMs": 1151,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 1390,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "kilo-free/~anthropic/claude-fable-latest": {
@@ -725,13 +733,13 @@
       },
       "provider": "kilo-free",
       "status": "dead",
-      "failures": 2,
+      "failures": 3,
       "health": {
         "ok": false,
         "reason": "auth 401",
         "status": 401,
-        "latencyMs": 615,
-        "checkedAt": "2026-11-26T17:33:54.689Z"
+        "latencyMs": 661,
+        "checkedAt": "2026-11-26T17:36:19.547Z"
       }
     },
     "ovh-free/gpt-oss-120b": {

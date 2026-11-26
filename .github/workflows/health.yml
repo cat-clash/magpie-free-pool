@@ -4,12 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '7 * * * *'   # 每小时第 7 分钟（UTC）
-  push:
-    paths:
-      - 'index.mjs'
-      - 'health.mjs'
-      - 'polling.mjs'
-      - '.github/workflows/health.yml'
+  # 不用 push 触发：否则每次推代码都会并发跑一次，两个 run 同时改快照会 rebase 冲突。
 
 permissions:
   contents: write
@@ -52,7 +47,8 @@ jobs:
             echo "snapshot unchanged"
           else
             git commit -m "chore(health): $(date -u '+%Y-%m-%d %H:%M') UTC snapshot"
-            git pull --rebase origin main
+            # 快照是机器产物，并发时后来者赢；-X theirs 直接采用远端内容，不用人工解冲突
+            git pull --rebase -X theirs origin main
             git push
           fi
 

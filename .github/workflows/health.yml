@@ -1,0 +1,61 @@
+name: health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'   # 每小时第 7 分钟（UTC）
+  push:
+    paths:
+      - 'index.mjs'
+      - 'health.mjs'
+      - 'polling.mjs'
+      - '.github/workflows/health.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run tests
+        run: node --test
+
+      - name: Probe free endpoints
+        run: node polling.mjs --once --max-probes 24
+
+      - name: Summary
+        run: |
+          node -e "
+          const s=require('./free_pool_snapshot.json');
+          console.log('checkedAt', s.checkedAt);
+          console.log(JSON.stringify(s.summary));
+          for(const [id,m] of Object.entries(s.models)) if(m.status==='alive') console.log(' -', id);
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit snapshot
+        run: |
+          git config --local user.name  "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add free_pool_snapshot.json
+          if git diff --cached --quiet; then
+            echo "snapshot unchanged"
+          else
+            git commit -m "chore(health): $(date -u '+%Y-%m-%d %H:%M') UTC snapshot"
+            git push
+          fi
+
+      - name: Purge jsDelivr cache
+        if: always()
+        continue-on-error: true
+        run: curl -sf --max-time 20 "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/free_pool_snapshot.json" || true

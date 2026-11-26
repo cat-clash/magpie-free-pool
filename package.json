@@ -1,0 +1,21 @@
+{
+  "name": "magpie-free-pool",
+  "version": "0.2.0",
+  "description": "免注册/免 key/免实名的免费 LLM API 池：kilo、llm7、pollinations、OVH 四个匿名 OpenAI 兼容端点 + 每小时自动健康检测（剔除失效模型、接入新模型）",
+  "type": "module",
+  "exports": { ".": "./index.mjs" },
+  "files": ["index.mjs", "health.mjs", "polling.mjs", "free_pool_snapshot.json", "README.md", "LICENSE"],
+  "scripts": {
+    "test": "node --test",
+    "health": "node polling.mjs --once",
+    "health:loop": "node polling.mjs --loop"
+  },
+  "magpie": {
+    "icon": "https://cdn.simpleicons.org/openai",
+    "options": {
+      "anonymousKey": { "type": "string", "title": "匿名端点使用的占位 key", "default": "anonymous" }
+    }
+  },
+  "keywords": ["magpie", "provider", "free", "anonymous", "openai-compatible", "kilo", "llm7", "pollinations", "ovh"],
+  "license": "MIT"
+}

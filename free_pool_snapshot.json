@@ -1,0 +1,703 @@
+{
+  "checkedAt": "2026-11-26T17:30:08.065Z",
+  "summary": {
+    "sources": 4,
+    "discovered": 565,
+    "duplicates": 0,
+    "probed": 16,
+    "alive": 5,
+    "suspect": 4,
+    "dead": 7,
+    "removed": 7,
+    "pool": 17
+  },
+  "sources": {
+    "kilo-free": {
+      "ok": true,
+      "error": null,
+      "discovered": 465,
+      "baseUrl": "https://api.kilo.ai/api/gateway"
+    },
+    "llm7-free": {
+      "ok": true,
+      "error": null,
+      "discovered": 72,
+      "baseUrl": "https://api.llm7.io/v1"
+    },
+    "pollinations-free": {
+      "ok": true,
+      "error": null,
+      "discovered": 1,
+      "baseUrl": "https://text.pollinations.ai/openai"
+    },
+    "ovh-free": {
+      "ok": true,
+      "error": null,
+      "discovered": 26,
+      "baseUrl": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1"
+    }
+  },
+  "models": {
+    "kilo-free/baidu/ernie-5.5-flash-preview:free": {
+      "id": "kilo-free/baidu/ernie-5.5-flash-preview:free",
+      "name": "Kilo Free · Baidu: ERNIE-5.5-Flash-Preview (free)",
+      "limit": {
+        "context": 1024000,
+        "output": 921600
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 4542,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/inclusionai/ling-3.2-flash:free": {
+      "id": "kilo-free/inclusionai/ling-3.2-flash:free",
+      "name": "Kilo Free · inclusionAI: Ling 3.2 Flash (free)",
+      "limit": {
+        "context": 1048576,
+        "output": 262144
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 3,
+      "health": {
+        "ok": false,
+        "reason": "rate-limited (429)",
+        "status": 429,
+        "latencyMs": 9993,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/kilo-auto/free": {
+      "id": "kilo-free/kilo-auto/free",
+      "name": "Kilo Free · Auto Free",
+      "limit": {
+        "context": 256000,
+        "output": 32768
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 5053,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/liquid/lfm-3-1.7b:free": {
+      "id": "kilo-free/liquid/lfm-3-1.7b:free",
+      "name": "Kilo Free · LiquidAI: LFM3-1.7B (free)",
+      "limit": {
+        "context": 262144,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5015,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+      "id": "kilo-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3 Nano Omni (free)",
+      "limit": {
+        "context": 256000,
+        "output": 65536
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "audio",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 11138,
+        "returnedModel": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free": {
+      "id": "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3 Ultra (free)",
+      "limit": {
+        "context": 1000000,
+        "output": 65536
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5013,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3.5-lightning:free": {
+      "id": "kilo-free/nvidia/nemotron-3.5-lightning:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Lightning (free)",
+      "limit": {
+        "context": 1000000,
+        "output": 65536
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 4,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5015,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3.5-super-vl:free": {
+      "id": "kilo-free/nvidia/nemotron-3.5-super-vl:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Super VL (free)",
+      "limit": {
+        "context": 1000000,
+        "output": 131072
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 3,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5014,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/openrouter/free": {
+      "id": "kilo-free/openrouter/free",
+      "name": "Kilo Free · OpenRouter Free Models Router",
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 3782,
+        "returnedModel": "liquid/lfm-3-1.7b:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/particle-ai/particle-1:free": {
+      "id": "kilo-free/particle-ai/particle-1:free",
+      "name": "Kilo Free · Particle AI: Particle-1 (free)",
+      "limit": {
+        "context": 1048576,
+        "output": 943718
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 2,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5014,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/recursive/flint-v1.0:free": {
+      "id": "kilo-free/recursive/flint-v1.0:free",
+      "name": "Kilo Free · Recursive: Flint (free)",
+      "limit": {
+        "context": 262144,
+        "output": 235929
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "health": {
+        "ok": true,
+        "reason": "ok (empty content)",
+        "status": 200,
+        "latencyMs": 6234,
+        "returnedModel": "recursive/flint-v1.0:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/reflection/beam-free": {
+      "id": "kilo-free/reflection/beam-free",
+      "name": "Kilo Free · Reflection: Beam 1.0 (Free)",
+      "limit": {
+        "context": 1048576,
+        "output": 131072
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 2,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5014,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "kilo-free/stealth/glyph-cluster": {
+      "id": "kilo-free/stealth/glyph-cluster",
+      "name": "Kilo Free · Glyph Cluster",
+      "limit": {
+        "context": 256000,
+        "output": 256000
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 2,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5014,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "llm7-free/codestral-latest": {
+      "id": "llm7-free/codestral-latest",
+      "name": "LLM7 Free · codestral-latest",
+      "limit": {
+        "context": 32000,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "llm7-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5014,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "llm7-free/gpt-oss:20b": {
+      "id": "llm7-free/gpt-oss:20b",
+      "name": "LLM7 Free · gpt-oss:20b",
+      "limit": {
+        "context": 128000,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "llm7-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5015,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "llm7-free/turbo": {
+      "name": "LLM7 Free · LLM7 Turbo",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": true,
+      "id": "llm7-free/turbo",
+      "provider": "llm7-free",
+      "status": "dead",
+      "failures": 3,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5013,
+        "checkedAt": "2026-11-26T17:30:08.065Z"
+      }
+    },
+    "ovh-free/Olala-v1.0-mini-7A1B": {
+      "id": "ovh-free/Olala-v1.0-mini-7A1B",
+      "name": "OVH Free · Olala-v1.0-mini-7A1B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "probe ovh-free/Olala-v1.0-mini-7A1B timeout 12000ms",
+        "status": 0,
+        "latencyMs": 12000,
+        "checkedAt": "2026-11-26T17:26:48.764Z"
+      }
+    },
+    "ovh-free/Olala-v1.0-summarise": {
+      "id": "ovh-free/Olala-v1.0-summarise",
+      "name": "OVH Free · Olala-v1.0-summarise",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "Client network socket disconnected before secure TLS connection was established",
+        "status": 0,
+        "latencyMs": 5018,
+        "checkedAt": "2026-11-26T17:26:48.764Z"
+      }
+    },
+    "ovh-free/gpt-oss-120b": {
+      "name": "OVH Free · GPT-OSS 120B",
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": true,
+      "id": "ovh-free/gpt-oss-120b",
+      "provider": "ovh-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "fetch failed",
+        "status": 0,
+        "latencyMs": 5006,
+        "checkedAt": "2026-11-26T15:59:34.373Z"
+      }
+    },
+    "ovh-free/Qwen3.8-27B": {
+      "name": "OVH Free · Qwen3.8 27B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": true,
+      "reasoning": true,
+      "id": "ovh-free/Qwen3.8-27B",
+      "provider": "ovh-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "fetch failed",
+        "status": 0,
+        "latencyMs": 5004,
+        "checkedAt": "2026-11-26T15:59:34.373Z"
+      }
+    },
+    "pollinations-free/openai-fast": {
+      "name": "Pollinations Free · OpenAI Fast (gpt-oss-20b)",
+      "limit": {
+        "context": 16000,
+        "output": 800
+      },
+      "tool_call": true,
+      "reasoning": true,
+      "id": "pollinations-free/openai-fast",
+      "provider": "pollinations-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "fetch failed",
+        "status": 0,
+        "latencyMs": 5004,
+        "checkedAt": "2026-11-26T15:59:34.373Z"
+      }
+    },
+    "kilo-free/google/lyria-3-clip-preview": {
+      "id": "kilo-free/google/lyria-3-clip-preview",
+      "name": "Kilo Free · Google: Lyria 3 Clip Preview",
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text",
+          "audio"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "ECONNRESET: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": 0,
+        "latencyMs": 5002,
+        "checkedAt": "2026-11-26T15:51:18.220Z"
+      }
+    },
+    "kilo-free/google/lyria-3-pro-preview": {
+      "id": "kilo-free/google/lyria-3-pro-preview",
+      "name": "Kilo Free · Google: Lyria 3 Pro Preview",
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text",
+          "audio"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "ECONNRESET: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": 0,
+        "latencyMs": 5002,
+        "checkedAt": "2026-11-26T15:51:18.220Z"
+      }
+    },
+    "kilo-free/humansand/ampersand-v0.1": {
+      "id": "kilo-free/humansand/ampersand-v0.1",
+      "name": "Kilo Free · Ampersand v0.1",
+      "limit": {
+        "context": 1000000,
+        "output": 32768
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "health": {
+        "ok": false,
+        "reason": "ECONNRESET: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": 0,
+        "latencyMs": 5002,
+        "checkedAt": "2026-11-26T15:51:18.220Z"
+      }
+    }
+  }
+}

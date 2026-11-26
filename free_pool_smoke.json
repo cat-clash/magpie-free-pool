@@ -1,0 +1,74 @@
+﻿{
+    "tested_at":  "2026-11-25T13:19:34.9936922+08:00",
+    "summary":  "All 3 endpoints / 5 model calls returned HTTP 200 with non-empty assistant content in this session.",
+    "proxy":  "http://127.0.0.1:7897 (Kilo and LLM7); OVH used direct egress because the proxy egress IP had exhausted its anonymous quota.",
+    "request":  {
+                    "messages":  [
+                                     {
+                                         "content":  "say hi",
+                                         "role":  "user"
+                                     }
+                                 ],
+                    "max_tokens":  32,
+                    "temperature":  0
+                },
+    "endpoints":  {
+                      "kilo_nemotron":  {
+                                            "provider":  "kilo-free",
+                                            "url":  "https://api.kilo.ai/api/gateway/chat/completions",
+                                            "route":  "proxy",
+                                            "requested_model":  "nvidia/nemotron-3.5-lightning:free",
+                                            "http_status":  200,
+                                            "returned_model":  "nvidia/nemotron-3.5-lightning:free",
+                                            "has_content":  true,
+                                            "content_preview":  "Here\u0027s a thinking process:\n\n1.  **Analyze User Input:** The user said \"say hi\".\n2.  **Identify Intent:** The user",
+                                            "response_first_200_chars":  "{\"id\":\"gen_01M88J1SQYV831J8SXJM1AEE8G\",\"object\":\"chat.completion\",\"created\":1795583700,\"model\":\"nvidia/nemotron-3.5-lightning:free\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\",\"re"
+                                        },
+                      "kilo_auto_free":  {
+                                             "provider":  "kilo-free",
+                                             "url":  "https://api.kilo.ai/api/gateway/chat/completions",
+                                             "route":  "proxy",
+                                             "requested_model":  "kilo-auto/free",
+                                             "http_status":  200,
+                                             "returned_model":  "nvidia/nemotron-3-ultra-550b-a55b:free",
+                                             "has_content":  true,
+                                             "content_preview":  "Hi there! How can I help you today",
+                                             "response_first_200_chars":  "{\"id\":\"gen-1795583696-NW8e0jvpdvUAw29x9uZF\",\"object\":\"chat.completion\",\"created\":1795583696,\"model\":\"nvidia/nemotron-3-ultra-550b-a55b:free\",\"provider\":\"Nvidia\",\"system_fingerprint\":null,\"service_tier"
+                                         },
+                      "llm7_turbo":  {
+                                         "provider":  "llm7-free",
+                                         "url":  "https://api.llm7.io/v1/chat/completions",
+                                         "route":  "proxy",
+                                         "requested_model":  "turbo",
+                                         "http_status":  200,
+                                         "returned_model":  "codestral-latest",
+                                         "has_content":  true,
+                                         "content_preview":  "Hi there! 😊 How can I help you today?",
+                                         "response_first_200_chars":  "{\"id\":\"chatcmpl_e01b9162c49e41e396e0c8862d5ca388\",\"created\":1795583701,\"model\":\"codestral-latest\",\"usage\":{\"prompt_tokens\":5,\"total_tokens\":19,\"completion_tokens\":14,\"prompt_tokens_details\":{\"cached_t"
+                                     },
+                      "ovh_gptoss120b":  {
+                                             "provider":  "ovh-free",
+                                             "url":  "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions",
+                                             "route":  "direct",
+                                             "requested_model":  "gpt-oss-120b",
+                                             "http_status":  200,
+                                             "returned_model":  "gpt-oss-120b",
+                                             "has_content":  true,
+                                             "content_preview":  "Hi! 👋 How can I help you today?",
+                                             "response_first_200_chars":  "{\"id\":\"chatcmpl-9c470d960cd7ae2c\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi! 👋 How can I help you today?\",\"reasoning\":\"We need to respond. Just say hi.\"},\"finish_reason\":\"stop",
+                                             "note":  "Anonymous call succeeded. Subsequent calls from the same egress IP returned 429 with x-ratelimit-limit-year:1, x-ratelimit-remaining-year:0, retry-after ~3177956s; the proxy 7897 egress IP was already exhausted."
+                                         },
+                      "ovh_qwen":  {
+                                       "provider":  "ovh-free",
+                                       "url":  "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions",
+                                       "route":  "direct",
+                                       "requested_model":  "Qwen3.8-27B",
+                                       "http_status":  200,
+                                       "returned_model":  "Qwen3.8-27B",
+                                       "has_content":  true,
+                                       "content_preview":  "\n\nHi",
+                                       "response_first_200_chars":  "{\"id\":\"chatcmpl-890181516caed1b6\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\\n\\nHi\",\"reasoning\":\"The user simply said \\\"say hi\\\". This is a straightforward greeting request. I sho",
+                                       "note":  "Anonymous call succeeded. Subsequent calls from the same egress IP returned 429 with x-ratelimit-limit-year:1, x-ratelimit-remaining-year:0, retry-after ~3177956s; the proxy 7897 egress IP was already exhausted."
+                                   }
+                  }
+}

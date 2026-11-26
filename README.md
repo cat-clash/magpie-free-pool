@@ -85,6 +85,10 @@ node --test    # 26 个用例，全程 mock fetch，不访问外网
 | 产物 `list.txt` | `free_pool_snapshot.json` |
 | CI 自动 commit + jsDelivr purge | 同样 |
 
+## 已知问题
+
+装好后模型全部超时、`provider test` 报 `no answer in 10s`？先看 [docs/known-issues.md](./docs/known-issues.md) 的**陷阱 #7**（`settings.json` 的 `proxy` 字段）。其余端点状态与运维坑也记在那份文件里。
+
 ## 授权
 
 MIT。端点由各自运营方提供，配额与条款随时可能变；本项目只做探测与汇总，不绕过任何鉴权。

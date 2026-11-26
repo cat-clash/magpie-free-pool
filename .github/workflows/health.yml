@@ -42,14 +42,28 @@ jobs:
         run: |
           git config --local user.name  "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # GitHub 侧 HTTP/2 偶发 "Error in the HTTP2 framing layer"，强制 HTTP/1.1 规避
+          git config --local http.version HTTP/1.1
           git add free_pool_snapshot.json
           if git diff --cached --quiet; then
             echo "snapshot unchanged"
           else
             git commit -m "chore(health): $(date -u '+%Y-%m-%d %H:%M') UTC snapshot"
-            # 快照是机器产物，并发时后来者赢；-X theirs 直接采用远端内容，不用人工解冲突
-            git pull --rebase -X theirs origin main
-            git push
+            ok=0
+            for i in 1 2 3 4 5; do
+              # 快照是机器产物，并发时后来者赢；-X theirs 直接采用远端内容，不用人工解冲突
+              if git pull --rebase -X theirs origin main && git push; then
+                ok=1
+                break
+              fi
+              echo "push attempt $i failed, retrying in $((i*5))s"
+              git rebase --abort 2>/dev/null || true
+              sleep $((i*5))
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::error::snapshot push failed after 5 attempts"
+              exit 1
+            fi
           fi
 
       - name: Purge jsDelivr cache

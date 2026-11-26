@@ -52,6 +52,7 @@ jobs:
             echo "snapshot unchanged"
           else
             git commit -m "chore(health): $(date -u '+%Y-%m-%d %H:%M') UTC snapshot"
+            git pull --rebase origin main
             git push
           fi
 

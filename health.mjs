@@ -20,6 +20,7 @@ import { fileURLToPath } from 'node:url'
 import http from 'node:http'
 import https from 'node:https'
 import tls from 'node:tls'
+import net from 'node:net'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 export const DEFAULT_SNAPSHOT = resolve(HERE, 'free_pool_snapshot.json')
@@ -127,10 +128,39 @@ export function createProxyFetch(proxyUrl) {
 }
 
 // 有代理就用隧道，否则用原生 fetch
-export function makeFetch(explicitProxy) {
+// 代理端口存活探测。陷阱 #4：代理挂了以后 Node/bun 仍会去连死端口，
+// 得到一串 ECONNREFUSED，看起来像"端点全挂"。这里先探活，死了就回退直连。
+async function proxyAlive(proxyUrl, timeoutMs = 1500) {
+  let host
+  let port
+  try {
+    const u = new URL(proxyUrl)
+    host = u.hostname
+    port = Number(u.port || (u.protocol === 'https:' ? 443 : 80))
+  } catch {
+    return false
+  }
+  return new Promise((resolve) => {
+    const socket = net.connect({ host, port })
+    const done = (ok) => {
+      socket.destroy()
+      resolve(ok)
+    }
+    socket.setTimeout(timeoutMs)
+    socket.once('connect', () => done(true))
+    socket.once('timeout', () => done(false))
+    socket.once('error', () => done(false))
+  })
+}
+
+// 有代理且代理活着 → 隧道；代理死了或没配 → 直连
+export async function makeFetch(explicitProxy) {
   const chosen = explicitProxy || process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy
-  if (!chosen) return { doFetch: fetch, transport: 'direct' }
-  return { doFetch: createProxyFetch(chosen), transport: `proxy ${chosen}` }
+  if (!chosen) return { doFetch: fetch, transport: 'direct', proxyDown: false }
+  if (!(await proxyAlive(chosen))) {
+    return { doFetch: fetch, transport: `direct (proxy ${chosen} unreachable)`, proxyDown: true }
+  }
+  return { doFetch: createProxyFetch(chosen), transport: `proxy ${chosen}`, proxyDown: false }
 }
 
 // ---------------------------------------------------------------- 归一化 ----
@@ -308,27 +338,58 @@ export async function probeModel(spec, model, doFetch = fetch, timeout = DEFAULT
     const latency = Date.now() - started
     if (res.status === 429) {
       const ra = res.headers?.get?.('retry-after') ?? null
-      return { ok: false, reason: `rate-limited (429)${ra ? ` retry-after=${ra}s` : ''}`, status: 429, latency, transient: true, retryAfter: ra }
+      return {
+        ok: false,
+        reason: `rate-limited (429)${ra ? ` retry-after=${ra}s` : ''}`,
+        status: 429,
+        latency,
+        transient: true,
+        retryAfter: ra,
+        category: 'rate_limit',
+      }
     }
-    if (res.status === 401 || res.status === 403) return { ok: false, reason: `auth ${res.status}`, status: res.status, latency, transient: false }
-    if (!res.ok) return { ok: false, reason: `HTTP ${res.status}`, status: res.status, latency, transient: res.status >= 500 }
+    if (res.status === 401 || res.status === 403) {
+      return { ok: false, reason: `auth ${res.status}`, status: res.status, latency, transient: false, category: 'auth' }
+    }
+    if (res.status === 402) {
+      return { ok: false, reason: 'payment required (402)', status: 402, latency, transient: false, category: 'payment' }
+    }
+    if (!res.ok) {
+      const transient = res.status >= 500
+      return {
+        ok: false,
+        reason: `HTTP ${res.status}`,
+        status: res.status,
+        latency,
+        transient,
+        category: transient ? 'server' : 'http',
+      }
+    }
     let returned = rawId
     let hasContent = false
+    let hasReasoning = false
     try {
       const json = await res.json()
       returned = json?.model || rawId
       const content = json?.choices?.[0]?.message?.content
+      const reasoning = json?.choices?.[0]?.message?.reasoning
       hasContent = typeof content === 'string' && content.trim().length > 0
+      hasReasoning = typeof reasoning === 'string' && reasoning.trim().length > 0
     } catch {
       // 有些网关返回非标准 JSON，只要 200 就当结构可用
     }
+    const answered = hasContent || hasReasoning
     return {
       ok: true,
       status: res.status,
       latency,
       returnedModel: returned,
       hasContent,
-      reason: hasContent ? 'ok' : 'ok (empty content)',
+      hasReasoning,
+      reason: answered ? 'ok' : 'ok (empty content)',
+      category: 'ok',
+      // 质量分：能真的回话是及格线，答得越快分越高。空回复打折但不判死。
+      quality: answered ? qualityScore(latency) : 0.4,
     }
   } catch (err) {
     return {
@@ -337,8 +398,16 @@ export async function probeModel(spec, model, doFetch = fetch, timeout = DEFAULT
       status: 0,
       latency: Date.now() - started,
       transient: true,
+      category: 'network',
     }
   }
+}
+
+// 质量分 0..1：500ms 内满分，10s 以上接近 0。只用于候选排序，不决定生死。
+export function qualityScore(latencyMs) {
+  if (!Number.isFinite(latencyMs) || latencyMs < 0) return 0.5
+  const t = Math.min(latencyMs, 10000)
+  return Math.round((1 - t / 10000) * 1000) / 1000
 }
 
 // ---------------------------------------------------------------- 合并 ----
@@ -363,6 +432,37 @@ export function dedupeModels(models) {
 // 从快照恢复某个 model 的连续失败次数
 function priorFailures(prev, id) {
   return prev?.models?.[id]?.failures ?? 0
+}
+
+// 从快照读上轮质量分（没有则按中性值处理）
+function priorQuality(prev, id) {
+  const q = prev?.models?.[id]?.quality
+  return typeof q === 'number' ? q : 0.5
+}
+
+/**
+ * 候选排序：新模型优先 → 已知高质量模型 → 已知低质量 → 付费。
+ * 这样每小时有限额度先花在"没试过的"和"上轮最好的"上。
+ */
+export function selectCandidates(unique, prev, maxProbes) {
+  const rank = (m) => {
+    const known = Boolean(prev?.models?.[m.id])
+    const paid = m.free === false
+    if (!known && !paid) return 0 // 新免费模型
+    if (known && !paid) return 1 // 复检，按质量排
+    if (!known && paid) return 2
+    return 3
+  }
+  return unique
+    .slice()
+    .sort((a, b) => {
+      const ra = rank(a)
+      const rb = rank(b)
+      if (ra !== rb) return ra - rb
+      if (ra === 1) return priorQuality(prev, b.id) - priorQuality(prev, a.id) // 高质量先复检
+      return String(a.id).localeCompare(String(b.id))
+    })
+    .slice(0, maxProbes)
 }
 
 /**
@@ -413,16 +513,11 @@ export async function healthCheck(specs, opts = {}) {
     }
   }
 
-  // 阶段 3：去重 + 限量（优先探测免费模型）
+  // 阶段 3：去重 + 按质量/新鲜度挑候选
   const { models: unique, dup } = dedupeModels(allModels)
   report.summary.discovered = unique.length
   report.summary.duplicates = dup.length
-  const preferred = unique.slice().sort((a, b) => {
-    const fa = a.free === false ? 1 : 0
-    const fb = b.free === false ? 1 : 0
-    return fa - fb || String(a.id).localeCompare(String(b.id))
-  })
-  const candidates = preferred.slice(0, maxProbes)
+  const candidates = selectCandidates(unique, prev, maxProbes)
 
   // 阶段 4：并发探测
   const probed = await Promise.all(
@@ -441,10 +536,14 @@ export async function healthCheck(specs, opts = {}) {
     if (!health.ok && health.transient && failures < deadThreshold) status = 'suspect'
     const model = { ...m }
     delete model.free // 内部标记不外泄
+    // 质量分：本轮探测到就用本轮的，没探到（不该发生）沿用上轮的
+    const quality = typeof health.quality === 'number' ? health.quality : priorQuality(prev, m.id)
     report.models[m.id] = {
       ...model,
       status,
       failures,
+      quality,
+      category: health.category ?? 'unknown',
       health: {
         ok: health.ok,
         reason: health.reason,
@@ -452,6 +551,7 @@ export async function healthCheck(specs, opts = {}) {
         latencyMs: health.latency,
         returnedModel: health.returnedModel,
         hasContent: health.hasContent,
+        ...(health.retryAfter ? { retryAfter: health.retryAfter } : {}),
         checkedAt: now,
       },
     }

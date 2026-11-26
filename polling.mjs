@@ -22,13 +22,20 @@ export async function runOnce(opts = {}) {
     deadThreshold = 2,
     proxy,
     logger = console.log,
+    doFetch: injected,
+    transport: injectedTransport,
+    specs = SPECS,
     ...rest
   } = opts
 
-  // 传输层：有代理走隧道，否则直连
-  const { doFetch, transport } = makeFetch(proxy)
+  // 传输层：代理活着走隧道，代理挂了自动回退直连；测试可注入 doFetch 完全离线
+  const picked = injected
+    ? { doFetch: injected, transport: injectedTransport ?? 'injected', proxyDown: false }
+    : await makeFetch(proxy)
+  const { doFetch, transport, proxyDown } = picked
+  if (proxyDown) logger('[health] WARNING 代理端口不可达，已回退直连（检查 Clash 是否在跑）')
   const prev = dryRun ? null : await readSnapshot(snapshotPath)
-  const report = await healthCheck(SPECS, { ...rest, prev, doFetch, maxProbes, deadThreshold })
+  const report = await healthCheck(specs, { ...rest, prev, doFetch, maxProbes, deadThreshold })
   const s = report.summary
   logger(`[health] ${report.checkedAt} transport=${transport}`)
   logger(

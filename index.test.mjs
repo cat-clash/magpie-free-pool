@@ -15,6 +15,9 @@ import {
   fetchModels,
   probeModel,
   dedupeModels,
+  selectCandidates,
+  qualityScore,
+  makeFetch,
   aliveModelIds,
   writeSnapshot,
   readSnapshot,
@@ -360,4 +363,115 @@ test('runOnce with mocked fetch writes a snapshot', async () => {
 
 test('DEFAULT_SNAPSHOT points inside the plugin dir', () => {
   assert.ok(DEFAULT_SNAPSHOT.endsWith('free_pool_snapshot.json'))
+})
+// ------------------------------------------------ 新增：质量分与错误分类 ----
+
+test('qualityScore: faster answers score higher, capped to 0..1', () => {
+  assert.equal(qualityScore(0) > qualityScore(500), true)
+  assert.equal(qualityScore(500) > qualityScore(3000), true)
+  assert.equal(qualityScore(3000) > qualityScore(20000), true)
+  assert.equal(qualityScore(0) <= 1, true)
+  assert.equal(qualityScore(20000) >= 0, true)
+})
+
+test('probeModel: classifies error categories for the four failure families', async () => {
+  const spec = { id: 'k', baseUrl: 'https://k.example' }
+  const model = { id: 'k/m' }
+
+  const rate = await probeModel(spec, model, async () => jsonResponse({}, 429))
+  assert.equal(rate.category, 'rate_limit')
+  assert.equal(rate.transient, true)
+
+  const auth = await probeModel(spec, model, async () => jsonResponse({}, 401))
+  assert.equal(auth.category, 'auth')
+  assert.equal(auth.transient, false)
+
+  const pay = await probeModel(spec, model, async () => jsonResponse({}, 402))
+  assert.equal(pay.category, 'payment')
+  assert.equal(pay.transient, false)
+
+  const net = await probeModel(spec, model, async () => { throw new Error('ECONNRESET') })
+  assert.equal(net.category, 'network')
+  assert.equal(net.transient, true)
+})
+
+test('probeModel: ok result carries a quality score', async () => {
+  const h = await probeModel({ id: 'k', baseUrl: 'https://k.example' }, { id: 'k/m' }, async () =>
+    jsonResponse({ model: 'm', choices: [{ message: { content: 'hello' } }] }),
+  )
+  assert.equal(h.category, 'ok')
+  assert.equal(typeof h.quality, 'number')
+  assert.ok(h.quality > 0.4, '正常回复应当高于空回复的 0.4')
+})
+
+test('probeModel: empty content is kept as alive but scored lower', async () => {
+  const h = await probeModel({ id: 'k', baseUrl: 'https://k.example' }, { id: 'k/m' }, async () =>
+    jsonResponse({ model: 'm', choices: [{ message: { content: '   ' } }] }),
+  )
+  assert.equal(h.ok, true)
+  assert.equal(h.quality, 0.4)
+})
+
+// ------------------------------------------------ 新增：候选排序 ----
+
+test('selectCandidates: new free models first, then known by quality, paid last', () => {
+  const prev = {
+    models: {
+      'a/known-fast': { quality: 0.95 },
+      'a/known-slow': { quality: 0.3 },
+    },
+  }
+  const unique = [
+    { id: 'a/paid', free: false },
+    { id: 'a/known-slow' },
+    { id: 'a/known-fast' },
+    { id: 'a/new-one' },
+  ]
+  const picked = selectCandidates(unique, prev, 10)
+  assert.deepEqual(picked.map((m) => m.id), ['a/new-one', 'a/known-fast', 'a/known-slow', 'a/paid'])
+})
+
+test('selectCandidates: respects maxProbes', () => {
+  const unique = Array.from({ length: 20 }, (_, i) => ({ id: `a/m${String(i).padStart(2, '0')}` }))
+  assert.equal(selectCandidates(unique, null, 5).length, 5)
+})
+
+test('healthCheck stores quality and category on each probed model', async () => {
+  const doFetch = mockFetch({
+    models: {
+      'alpha.example': {
+        data: [
+          { id: 'good', name: 'Good', architecture: { output_modalities: ['text'] }, pricing: { prompt: '0', completion: '0' }, top_provider: { context_length: 8000 } },
+        ],
+      },
+      'beta.example': { data: [] },
+    },
+  })
+  const report = await healthCheck(MOCK_SPECS, { prev: null, doFetch, maxProbes: 10 })
+  const entry = report.models['alpha/good']
+  assert.equal(entry.status, 'alive')
+  assert.equal(entry.category, 'ok')
+  assert.equal(typeof entry.quality, 'number')
+  assert.equal(typeof entry.health.latencyMs, 'number')
+})
+
+// ------------------------------------------------ 新增：代理回退 ----
+
+test('makeFetch: falls back to direct when the proxy port is dead', async () => {
+  const r = await makeFetch('http://127.0.0.1:1') // 1 号端口必然不可连
+  assert.equal(r.proxyDown, true)
+  assert.equal(r.doFetch, globalThis.fetch)
+  assert.match(r.transport, /unreachable/)
+})
+
+test('makeFetch: no proxy configured stays direct', async () => {
+  const env = { ...process.env }
+  for (const k of ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy']) delete process.env[k]
+  try {
+    const r = await makeFetch()
+    assert.equal(r.transport, 'direct')
+    assert.equal(r.proxyDown, false)
+  } finally {
+    Object.assign(process.env, env)
+  }
 })

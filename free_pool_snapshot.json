@@ -1,15 +1,15 @@
 {
-  "checkedAt": "2026-11-26T22:43:24.681Z",
+  "checkedAt": "2026-11-26T22:48:50.769Z",
   "summary": {
     "sources": 4,
     "discovered": 563,
     "duplicates": 0,
-    "probed": 14,
-    "alive": 13,
-    "suspect": 0,
-    "dead": 1,
-    "removed": 9,
-    "pool": 21
+    "probed": 24,
+    "alive": 16,
+    "suspect": 2,
+    "dead": 6,
+    "removed": 6,
+    "pool": 24
   },
   "sources": {
     "kilo-free": {
@@ -38,106 +38,11 @@
     }
   },
   "models": {
-    "kilo-free/kilo-auto/free": {
-      "id": "kilo-free/kilo-auto/free",
-      "name": "Kilo Free · Auto Free",
+    "llm7-free/codestral-latest": {
+      "id": "llm7-free/codestral-latest",
+      "name": "LLM7 Free · codestral-latest",
       "limit": {
-        "context": 256000,
-        "output": 32768
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.801,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1994,
-        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/inclusionai/ling-3.2-flash:free": {
-      "id": "kilo-free/inclusionai/ling-3.2-flash:free",
-      "name": "Kilo Free · inclusionAI: Ling 3.2 Flash (free)",
-      "limit": {
-        "context": 1048576,
-        "output": 262144
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "dead",
-      "failures": 2,
-      "quality": 0.5,
-      "category": "rate_limit",
-      "health": {
-        "ok": false,
-        "reason": "rate-limited (429)",
-        "status": 429,
-        "latencyMs": 1335,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/baidu/ernie-5.5-flash-preview:free": {
-      "id": "kilo-free/baidu/ernie-5.5-flash-preview:free",
-      "name": "Kilo Free · Baidu: ERNIE-5.5-Flash-Preview (free)",
-      "limit": {
-        "context": 1024000,
-        "output": 921600
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.754,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 2463,
-        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/liquid/lfm-3-1.7b:free": {
-      "id": "kilo-free/liquid/lfm-3-1.7b:free",
-      "name": "Kilo Free · LiquidAI: LFM3-1.7B (free)",
-      "limit": {
-        "context": 262144,
+        "context": 32000,
         "output": 8192
       },
       "tool_call": true,
@@ -150,27 +55,27 @@
           "text"
         ]
       },
-      "provider": "kilo-free",
+      "provider": "llm7-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.852,
+      "quality": 0.972,
       "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1485,
-        "returnedModel": "liquid/lfm-3-1.7b:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "latencyMs": 279,
+        "returnedModel": "codestral-latest",
+        "hasContent": true,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
-    "kilo-free/particle-ai/particle-1:free": {
-      "id": "kilo-free/particle-ai/particle-1:free",
-      "name": "Kilo Free · Particle AI: Particle-1 (free)",
+    "kilo-free/openrouter/free": {
+      "id": "kilo-free/openrouter/free",
+      "name": "Kilo Free · OpenRouter Free Models Router",
       "limit": {
-        "context": 1048576,
-        "output": 943718
+        "context": 200000,
+        "output": 8192
       },
       "tool_call": true,
       "reasoning": false,
@@ -186,146 +91,16 @@
       "provider": "kilo-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.852,
+      "quality": 0.834,
       "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1482,
-        "returnedModel": "particle-ai/particle-1:free",
+        "latencyMs": 1664,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/recursive/flint-v1.0:free": {
-      "id": "kilo-free/recursive/flint-v1.0:free",
-      "name": "Kilo Free · Recursive: Flint (free)",
-      "limit": {
-        "context": 262144,
-        "output": 235929
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.802,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1984,
-        "returnedModel": "recursive/flint-v1.0:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/nvidia/nemotron-3.5-super-vl:free": {
-      "id": "kilo-free/nvidia/nemotron-3.5-super-vl:free",
-      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Super VL (free)",
-      "limit": {
-        "context": 1000000,
-        "output": 131072
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text",
-          "image",
-          "video"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.825,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1754,
-        "returnedModel": "nvidia/nemotron-3.5-super-vl:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/nvidia/nemotron-3.5-lightning:free": {
-      "id": "kilo-free/nvidia/nemotron-3.5-lightning:free",
-      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Lightning (free)",
-      "limit": {
-        "context": 1000000,
-        "output": 65536
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.867,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1328,
-        "returnedModel": "nvidia/nemotron-3.5-lightning:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free": {
-      "id": "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free",
-      "name": "Kilo Free · NVIDIA: Nemotron 3 Ultra (free)",
-      "limit": {
-        "context": 1000000,
-        "output": 65536
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.846,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1543,
-        "returnedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "kilo-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
@@ -351,49 +126,16 @@
       "provider": "kilo-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.873,
+      "quality": 0.938,
       "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1274,
+        "latencyMs": 620,
         "returnedModel": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
-      }
-    },
-    "kilo-free/openrouter/free": {
-      "id": "kilo-free/openrouter/free",
-      "name": "Kilo Free · OpenRouter Free Models Router",
-      "limit": {
-        "context": 200000,
-        "output": 8192
-      },
-      "tool_call": true,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "kilo-free",
-      "status": "alive",
-      "failures": 0,
-      "quality": 0.875,
-      "category": "ok",
-      "health": {
-        "ok": true,
-        "reason": "ok",
-        "status": 200,
-        "latencyMs": 1248,
-        "returnedModel": "liquid/lfm-3-1.7b:free",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "kilo-free/reflection/beam-free": {
@@ -416,24 +158,24 @@
       "provider": "kilo-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.87,
+      "quality": 0.922,
       "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1303,
+        "latencyMs": 783,
         "returnedModel": "reflection/beam-free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
-    "kilo-free/stealth/glyph-cluster": {
-      "id": "kilo-free/stealth/glyph-cluster",
-      "name": "Kilo Free · Glyph Cluster",
+    "kilo-free/nvidia/nemotron-3.5-lightning:free": {
+      "id": "kilo-free/nvidia/nemotron-3.5-lightning:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Lightning (free)",
       "limit": {
-        "context": 256000,
-        "output": 256000
+        "context": 1000000,
+        "output": 65536
       },
       "tool_call": true,
       "reasoning": false,
@@ -448,23 +190,23 @@
       "provider": "kilo-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.4,
+      "quality": 0.947,
       "category": "ok",
       "health": {
         "ok": true,
-        "reason": "ok (empty content)",
+        "reason": "ok",
         "status": 200,
-        "latencyMs": 1939,
-        "returnedModel": "stealth/glyph-cluster",
+        "latencyMs": 532,
+        "returnedModel": "nvidia/nemotron-3.5-lightning:free",
         "hasContent": false,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
-    "llm7-free/codestral-latest": {
-      "id": "llm7-free/codestral-latest",
-      "name": "LLM7 Free · codestral-latest",
+    "kilo-free/liquid/lfm-3-1.7b:free": {
+      "id": "kilo-free/liquid/lfm-3-1.7b:free",
+      "name": "Kilo Free · LiquidAI: LFM3-1.7B (free)",
       "limit": {
-        "context": 32000,
+        "context": 262144,
         "output": 8192
       },
       "tool_call": true,
@@ -477,19 +219,245 @@
           "text"
         ]
       },
-      "provider": "llm7-free",
+      "provider": "kilo-free",
       "status": "alive",
       "failures": 0,
-      "quality": 0.886,
+      "quality": 0.954,
       "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1138,
-        "returnedModel": "codestral-latest",
-        "hasContent": true,
-        "checkedAt": "2026-11-26T22:43:24.681Z"
+        "latencyMs": 465,
+        "returnedModel": "liquid/lfm-3-1.7b:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/particle-ai/particle-1:free": {
+      "id": "kilo-free/particle-ai/particle-1:free",
+      "name": "Kilo Free · Particle AI: Particle-1 (free)",
+      "limit": {
+        "context": 1048576,
+        "output": 943718
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.941,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 588,
+        "returnedModel": "particle-ai/particle-1:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free": {
+      "id": "kilo-free/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3 Ultra (free)",
+      "limit": {
+        "context": 1000000,
+        "output": 65536
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.922,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 777,
+        "returnedModel": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/nvidia/nemotron-3.5-super-vl:free": {
+      "id": "kilo-free/nvidia/nemotron-3.5-super-vl:free",
+      "name": "Kilo Free · NVIDIA: Nemotron 3.5 Super VL (free)",
+      "limit": {
+        "context": 1000000,
+        "output": 131072
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "video"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.929,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 712,
+        "returnedModel": "nvidia/nemotron-3.5-super-vl:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/recursive/flint-v1.0:free": {
+      "id": "kilo-free/recursive/flint-v1.0:free",
+      "name": "Kilo Free · Recursive: Flint (free)",
+      "limit": {
+        "context": 262144,
+        "output": 235929
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.929,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 707,
+        "returnedModel": "recursive/flint-v1.0:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/kilo-auto/free": {
+      "id": "kilo-free/kilo-auto/free",
+      "name": "Kilo Free · Auto Free",
+      "limit": {
+        "context": 256000,
+        "output": 32768
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.896,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 1037,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/baidu/ernie-5.5-flash-preview:free": {
+      "id": "kilo-free/baidu/ernie-5.5-flash-preview:free",
+      "name": "Kilo Free · Baidu: ERNIE-5.5-Flash-Preview (free)",
+      "limit": {
+        "context": 1024000,
+        "output": 921600
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.874,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 1256,
+        "returnedModel": "baidu/ernie-5.5-flash-preview:free",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/inclusionai/ling-3.2-flash:free": {
+      "id": "kilo-free/inclusionai/ling-3.2-flash:free",
+      "name": "Kilo Free · inclusionAI: Ling 3.2 Flash (free)",
+      "limit": {
+        "context": 1048576,
+        "output": 262144
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 3,
+      "quality": 0.5,
+      "category": "rate_limit",
+      "health": {
+        "ok": false,
+        "reason": "rate-limited (429)",
+        "status": 429,
+        "latencyMs": 532,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "llm7-free/gpt-oss:20b": {
@@ -510,91 +478,17 @@
         ]
       },
       "provider": "llm7-free",
-      "status": "alive",
-      "failures": 0,
-      "health": {
-        "ok": true,
-        "reason": "ok (empty content)",
-        "status": 200,
-        "latencyMs": 9370,
-        "returnedModel": "gpt-oss:20b",
-        "hasContent": false,
-        "checkedAt": "2026-11-26T17:55:32.022Z"
-      }
-    },
-    "llm7-free/turbo": {
-      "name": "LLM7 Free · LLM7 Turbo",
-      "limit": {
-        "context": 32768,
-        "output": 8192
-      },
-      "tool_call": true,
-      "id": "llm7-free/turbo",
-      "provider": "llm7-free",
-      "status": "dead",
-      "failures": 7,
+      "status": "suspect",
+      "failures": 1,
+      "quality": 0.5,
+      "category": "rate_limit",
       "health": {
         "ok": false,
         "reason": "rate-limited (429) retry-after=1s",
         "status": 429,
-        "latencyMs": 4458,
-        "checkedAt": "2026-11-26T17:55:32.022Z"
-      }
-    },
-    "ovh-free/Olala-v1.0-mini-7A1B": {
-      "id": "ovh-free/Olala-v1.0-mini-7A1B",
-      "name": "OVH Free · Olala-v1.0-mini-7A1B",
-      "limit": {
-        "context": 32768,
-        "output": 8192
-      },
-      "tool_call": false,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "ovh-free",
-      "status": "dead",
-      "failures": 4,
-      "health": {
-        "ok": false,
-        "reason": "rate-limited (429) retry-after=3047019s",
-        "status": 429,
-        "latencyMs": 948,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
-      }
-    },
-    "ovh-free/Olala-v1.0-summarise": {
-      "id": "ovh-free/Olala-v1.0-summarise",
-      "name": "OVH Free · Olala-v1.0-summarise",
-      "limit": {
-        "context": 32768,
-        "output": 8192
-      },
-      "tool_call": false,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "ovh-free",
-      "status": "dead",
-      "failures": 4,
-      "health": {
-        "ok": false,
-        "reason": "rate-limited (429) retry-after=3047019s",
-        "status": 429,
-        "latencyMs": 951,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
+        "latencyMs": 419,
+        "retryAfter": "1",
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "ovh-free/Olala-v1.0-translate": {
@@ -616,41 +510,15 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
+      "quality": 0.5,
+      "category": "http",
       "health": {
         "ok": false,
-        "reason": "rate-limited (429) retry-after=3047019s",
-        "status": 429,
-        "latencyMs": 954,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
-      }
-    },
-    "ovh-free/Qwen3Guard-Gen-0.6B": {
-      "id": "ovh-free/Qwen3Guard-Gen-0.6B",
-      "name": "OVH Free · Qwen3Guard-Gen-0.6B",
-      "limit": {
-        "context": 32768,
-        "output": 8192
-      },
-      "tool_call": false,
-      "reasoning": false,
-      "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "provider": "ovh-free",
-      "status": "dead",
-      "failures": 3,
-      "health": {
-        "ok": false,
-        "reason": "rate-limited (429) retry-after=3047019s",
-        "status": 429,
-        "latencyMs": 967,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
+        "reason": "HTTP 400",
+        "status": 400,
+        "latencyMs": 2147,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "ovh-free/Qwen3Guard-Gen-8B": {
@@ -673,14 +541,112 @@
       "provider": "ovh-free",
       "status": "alive",
       "failures": 0,
+      "quality": 0.805,
+      "category": "ok",
       "health": {
         "ok": true,
         "reason": "ok",
         "status": 200,
-        "latencyMs": 1200,
+        "latencyMs": 1953,
         "returnedModel": "Qwen3Guard-Gen-8B",
         "hasContent": true,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "ovh-free/Qwen3Guard-Gen-0.6B": {
+      "id": "ovh-free/Qwen3Guard-Gen-0.6B",
+      "name": "OVH Free · Qwen3Guard-Gen-0.6B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.768,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 2317,
+        "returnedModel": "Qwen3Guard-Gen-0.6B",
+        "hasContent": true,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "ovh-free/Olala-v1.0-summarise": {
+      "id": "ovh-free/Olala-v1.0-summarise",
+      "name": "OVH Free · Olala-v1.0-summarise",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.838,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 1619,
+        "returnedModel": "Olala-v1.0-summarise",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "ovh-free/Olala-v1.0-mini-7A1B": {
+      "id": "ovh-free/Olala-v1.0-mini-7A1B",
+      "name": "OVH Free · Olala-v1.0-mini-7A1B",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": false,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "ovh-free",
+      "status": "alive",
+      "failures": 0,
+      "quality": 0.777,
+      "category": "ok",
+      "health": {
+        "ok": true,
+        "reason": "ok",
+        "status": 200,
+        "latencyMs": 2234,
+        "returnedModel": "Olala-v1.0-mini-7A1B",
+        "hasContent": false,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "ovh-free/solaria-3": {
@@ -702,13 +668,15 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
+      "quality": 0.5,
+      "category": "http",
       "health": {
         "ok": false,
         "reason": "HTTP 404",
         "status": 404,
-        "latencyMs": 952,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
+        "latencyMs": 935,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "ovh-free/stable-diffusion-xl-base-v10": {
@@ -730,13 +698,100 @@
       },
       "provider": "ovh-free",
       "status": "dead",
-      "failures": 3,
+      "failures": 4,
+      "quality": 0.5,
+      "category": "http",
       "health": {
         "ok": false,
         "reason": "HTTP 404",
         "status": 404,
-        "latencyMs": 1390,
-        "checkedAt": "2026-11-26T17:36:19.547Z"
+        "latencyMs": 760,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "llm7-free/turbo": {
+      "name": "LLM7 Free · LLM7 Turbo",
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "tool_call": true,
+      "id": "llm7-free/turbo",
+      "provider": "llm7-free",
+      "status": "dead",
+      "failures": 8,
+      "quality": 0.5,
+      "category": "rate_limit",
+      "health": {
+        "ok": false,
+        "reason": "rate-limited (429) retry-after=10s",
+        "status": 429,
+        "latencyMs": 249,
+        "retryAfter": "10",
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/stealth/glyph-cluster": {
+      "id": "kilo-free/stealth/glyph-cluster",
+      "name": "Kilo Free · Glyph Cluster",
+      "limit": {
+        "context": 256000,
+        "output": 256000
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "suspect",
+      "failures": 1,
+      "quality": 0.4,
+      "category": "server",
+      "health": {
+        "ok": false,
+        "reason": "HTTP 503",
+        "status": 503,
+        "latencyMs": 463,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
+      }
+    },
+    "kilo-free/~anthropic/claude-haiku-latest": {
+      "id": "kilo-free/~anthropic/claude-haiku-latest",
+      "name": "Kilo Free · Anthropic: Claude Haiku Latest",
+      "limit": {
+        "context": 1000000,
+        "output": 128000
+      },
+      "tool_call": true,
+      "reasoning": false,
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "file",
+          "pdf"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "provider": "kilo-free",
+      "status": "dead",
+      "failures": 1,
+      "quality": 0.5,
+      "category": "auth",
+      "health": {
+        "ok": false,
+        "reason": "auth 401",
+        "status": 401,
+        "latencyMs": 147,
+        "checkedAt": "2026-11-26T22:48:50.769Z"
       }
     },
     "kilo-free/~anthropic/claude-fable-latest": {

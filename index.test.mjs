@@ -81,7 +81,7 @@ test('the four auth hooks expose one provider id each', async () => {
     [await KiloFreePlugin(), 'kilo-free'],
     [await Llm7FreePlugin(), 'llm7-free'],
     [await PollinationsFreePlugin(), 'pollinations-free'],
-    [await OvhFreePlugin(), 'ovh-free'],
+    [await OvhFreePlugin({}, { enableOvh: true }), 'ovh-free'],
   ]
   for (const [plugin, id] of pairs) {
     const auth = plugin.auth
@@ -112,7 +112,13 @@ test('authorize completes without a real key and loader uses a passthrough fetch
 })
 
 test('usage is static fair-use info with no fabricated values', async () => {
-  for (const make of [KiloFreePlugin, Llm7FreePlugin, PollinationsFreePlugin, OvhFreePlugin]) {
+  const makes = [
+    () => KiloFreePlugin(),
+    () => Llm7FreePlugin(),
+    () => PollinationsFreePlugin(),
+    () => OvhFreePlugin({}, { enableOvh: true }),
+  ]
+  for (const make of makes) {
     const usage = await (await make()).auth.usage()
     assert.ok(Array.isArray(usage.windows) && usage.windows.length > 0)
     for (const w of usage.windows) {
@@ -121,6 +127,13 @@ test('usage is static fair-use info with no fabricated values', async () => {
       assert.ok(w.display)
     }
   }
+})
+
+test('OvhFreePlugin yields no auth unless enableOvh', async () => {
+  const off = await OvhFreePlugin({}, {})
+  assert.equal(off.auth, undefined, '默认不应提供 auth，否则 magpie 会显示 0 models 的空壳')
+  const on = await OvhFreePlugin({}, { enableOvh: true })
+  assert.equal(on.auth.provider, 'ovh-free')
 })
 
 test('_internal exposes spec data for diagnostics', () => {

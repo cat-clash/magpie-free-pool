@@ -199,6 +199,10 @@ export const FreePoolModelsPlugin = async ({ client } = {}, options = {}) => ({
 export const KiloFreePlugin = async ({ client } = {}, options = {}) => ({ auth: anonymousAuth(SPECS[0], options) })
 export const Llm7FreePlugin = async ({ client } = {}, options = {}) => ({ auth: anonymousAuth(SPECS[1], options) })
 export const PollinationsFreePlugin = async ({ client } = {}, options = {}) => ({ auth: anonymousAuth(SPECS[2], options) })
-export const OvhFreePlugin = async ({ client } = {}, options = {}) => ({ auth: anonymousAuth(SPECS[3], options) })
+// OVH 匿名已 403：默认不提供 auth，provider 就不会出现在 magpie 里（否则会显示 0 models 的空壳）。
+export const OvhFreePlugin = async ({ client } = {}, options = {}) => {
+  if (options.enableOvh !== true) return {}
+  return { auth: anonymousAuth(SPECS[3], options) }
+}
 
 export const _internal = { SPECS, ICON, modelsFromSnapshot, seedModels, anonymousAuth, specById }

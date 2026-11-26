@@ -66,10 +66,16 @@ export const SPECS = [
     baseUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
     modelsUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models',
     modelFormat: 'openrouter',
-    note: 'OVHcloud Kepler 匿名端点；~2 RPM/IP/model，年度匿名额度易耗尽。',
+    note: 'OVHcloud Kepler 匿名端点；~2 RPM/IP/model，年度匿名额度易耗尽。额度耗尽返回 429，需 OAuth token 的模型返回 403。',
+    // 限流按"每请求递增"计（实测第 1 个 200、第 2 个起 429），所以每轮只探 2 个
+    maxProbesPerRound: 2,
+    // 种子必须写实测能过的模型：gpt-oss-120b / Qwen3.8-27B 在 2026-11-27 已是 429 额度耗尽，
+    // 写它们会导致快照缺失时 magpie 里全是"点了就报错"的模型。以下是实测 200 的。
     seedModels: {
-      'gpt-oss-120b': { name: 'GPT-OSS 120B', limit: { context: 131072, output: 8192 }, tool_call: true, reasoning: true },
-      'Qwen3.8-27B': { name: 'Qwen3.8 27B', limit: { context: 32768, output: 8192 }, tool_call: true, reasoning: true },
+      'Olala-v1.0-mini-7A1B': { name: 'Olala Mini 7A1B', limit: { context: 32768, output: 8192 }, tool_call: true },
+      'Olala-v1.0-summarise': { name: 'Olala Summarise', limit: { context: 32768, output: 4096 }, tool_call: false },
+      'nemotron3-nano-30b': { name: 'Nemotron 3 Nano 30B', limit: { context: 131072, output: 8192 }, tool_call: true, reasoning: true },
+      'gemma-4-26b-a4b': { name: 'Gemma 4 26B A4B', limit: { context: 131072, output: 8192 }, tool_call: true },
     },
     windows: [{ name: 'fair-use', limit: 2, unit: 'requests/model', span: 60, display: 'Anonymous: ~2 RPM/IP/model.' }],
   },

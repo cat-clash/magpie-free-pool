@@ -475,3 +475,32 @@ test('makeFetch: no proxy configured stays direct', async () => {
     Object.assign(process.env, env)
   }
 })
+
+// ------------------------------------------------ 新增：源级探测配额 ----
+
+test('healthCheck honours maxProbesPerRound per source', async () => {
+  const capped = [
+    {
+      id: 'alpha', name: 'Alpha', baseUrl: 'https://alpha.example/v1',
+      modelsUrl: 'https://alpha.example/v1/models', modelFormat: 'openrouter',
+      maxProbesPerRound: 2, seedModels: {},
+    },
+  ]
+  const catalog = { data: ['a', 'b', 'c', 'd', 'e'].map((id) => ({
+    id, name: id, architecture: { output_modalities: ['text'] },
+    pricing: { prompt: '0', completion: '0' }, top_provider: { context_length: 8000 },
+  })) }
+  let probedIds = []
+  const doFetch = async (url, init) => {
+    if (String(url).endsWith('/models')) return jsonResponse(catalog)
+    if (String(url).endsWith('/chat/completions')) {
+      const model = JSON.parse(init.body).model
+      probedIds.push(model)
+      return jsonResponse({ model, choices: [{ message: { content: 'ok' } }] })
+    }
+    return jsonResponse({}, 404)
+  }
+  const report = await healthCheck(capped, { prev: null, doFetch, maxProbes: 10 })
+  assert.equal(report.summary.probed, 2, '每轮只应探 2 个')
+  assert.equal(probedIds.length, 2)
+})

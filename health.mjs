@@ -519,9 +519,23 @@ export async function healthCheck(specs, opts = {}) {
   report.summary.duplicates = dup.length
   const candidates = selectCandidates(unique, prev, maxProbes)
 
-  // 阶段 4：并发探测
+  // 阶段 4：并发探测。声明 maxProbesPerRound 的源（如 OVH：限流是每请求递增的，
+  // 一次探多个会互相踩踏）本轮只探前 N 个，其余留到下轮由轮转覆盖。
+  const quota = new Map()
+  const thisRound = []
+  for (const m of candidates) {
+    const spec = m.provider ? specs.find((s) => s.id === m.provider) : null
+    const cap = spec?.maxProbesPerRound
+    if (Number.isFinite(cap)) {
+      const used = quota.get(spec.id) ?? 0
+      if (used >= cap) continue
+      quota.set(spec.id, used + 1)
+    }
+    thisRound.push(m)
+  }
+
   const probed = await Promise.all(
-    candidates.map(async (m) => ({ m, health: await probeModel(m.provider ? specs.find((s) => s.id === m.provider) : null, m, doFetch, probeTimeout) })),
+    thisRound.map(async (m) => ({ m, health: await probeModel(m.provider ? specs.find((s) => s.id === m.provider) : null, m, doFetch, probeTimeout) })),
   )
   report.summary.probed = probed.length
 

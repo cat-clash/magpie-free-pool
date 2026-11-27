@@ -13,8 +13,19 @@
 //   ovh-free          -> https://oai.endpoints.kepler.ai.cloud.ovh.net/v1 （匿名额度按 IP/年）
 
 import { aliveModelIds, readSnapshot, DEFAULT_SNAPSHOT } from './health.mjs'
+import { bucketOf, createPacing, getBreaker, shouldGate } from './risk.mjs'
 
 const ICON = 'https://cdn.simpleicons.org/openai'
+
+// 出网节奏：匿名端点按出口 IP 计费/限流，硬性 per-IP 规则（pollinations ≥45s、OVH ~2RPM）
+// 必须尊重，否则一连串请求把 IP 干进冷却 → "总是限流"。minMs/jitterMs 可被 FREEPOOL_PACE_*
+// 环境变量或 SPECS.pace 覆盖。
+function paceConfig(spec) {
+  return {
+    minMs: spec.pace?.minMs,
+    jitterMs: spec.pace?.jitterMs,
+  }
+}
 
 // 源定义（health.mjs 用）。seedModels 是快照缺失时的兜底。
 export const SPECS = [
@@ -32,6 +43,7 @@ export const SPECS = [
       'openrouter/free': { name: 'OpenRouter Free Router', limit: { context: 200000, output: 8192 }, tool_call: true },
     },
     windows: [{ name: 'fair-use', limit: 200, unit: 'requests', span: 3600, display: 'Public fair use: ~200 requests/hour/IP.' }],
+    pace: { minMs: 3000, jitterMs: 1000 },
   },
   {
     id: 'llm7-free',
@@ -45,6 +57,7 @@ export const SPECS = [
       turbo: { name: 'LLM7 Turbo', limit: { context: 32768, output: 8192 }, tool_call: true },
     },
     windows: [{ name: 'fair-use', display: 'Anonymous; no published quota.' }],
+    pace: { minMs: 1500, jitterMs: 500 },
   },
   {
     id: 'pollinations-free',
@@ -58,6 +71,7 @@ export const SPECS = [
       'openai-fast': { name: 'OpenAI Fast (gpt-oss-20b)', limit: { context: 16000, output: 800 }, tool_call: true, reasoning: true },
     },
     windows: [{ name: 'daily', limit: 100, unit: 'replies', span: 86400, display: 'Anonymous: ≤100 replies/day, ≥45s interval per IP (UTC reset).' }],
+    pace: { minMs: 45000, jitterMs: 5000 }, // 尊重硬性 ≥45s/每 IP 规则，避免 402
   },
   {
     id: 'ovh-free',
@@ -83,6 +97,7 @@ export const SPECS = [
       'gemma-4-26b-a4b': { name: 'Gemma 4 26B A4B', limit: { context: 131072, output: 8192 }, tool_call: true },
     },
     windows: [{ name: 'fair-use', limit: 2, unit: 'requests/model', span: 60, display: 'Anonymous: ~2 RPM/IP/model.' }],
+    pace: { minMs: 30000, jitterMs: 5000 }, // 尊重 ~2 RPM/IP 硬性规则
   },
 ]
 
@@ -127,8 +142,29 @@ function seedModels(spec) {  return Object.fromEntries(
   )
 }
 
+// 熔断 fail-fast 的合成 429：带 retry-after（剩余冷却，clamp 到 300s），让 magpie 短暂
+// rest 该账号后重试，而不是对它连试 7 次。匿名端点无账号池可轮换，fail-fast 的意义是
+// "别把出口 IP 继续撞进冷却"。
+function riskGateResponse(endpoint, retryAfterMs) {
+  const retrySeconds = Math.max(1, Math.min(300, Math.ceil(retryAfterMs / 1000)))
+  const body = JSON.stringify({
+    error: {
+      code: 429,
+      message: `Rate limit exceeded: risk-gated (circuit breaker) in magpie-free-pool (${endpoint}).`,
+      metadata: { source: 'magpie-free-pool/risk', endpoint },
+    },
+  })
+  const headers = {
+    'content-type': 'application/json',
+    'retry-after': String(retrySeconds),
+  }
+  return new Response(body, { status: 429, statusText: 'Too Many Requests', headers })
+}
+
 function anonymousAuth(spec, options = {}) {
   const key = options.anonymousKey || 'anonymous'
+  const bucket = bucketOf(spec.id)
+  const pacing = createPacing(paceConfig(spec))
   return {
     provider: spec.id,
     icon: ICON,
@@ -148,7 +184,24 @@ function anonymousAuth(spec, options = {}) {
         baseURL: spec.api,
         apiKey: key,
         async fetch(input, init) {
-          return fetch(input, init)
+          // ① 熔断 fail-fast：端点（或跨端点共因判定为 IP 被封）在冷却 → 不发上游。
+          const gate = shouldGate(bucket, spec.name)
+          if (gate.gate) {
+            return riskGateResponse(spec.id, gate.retryAfterMs)
+          }
+          // ② 节奏闸：按端点硬性 per-IP 间隔 + 抖动，出网前拉开节奏。
+          try {
+            await pacing.paceWait(spec.id)
+          } catch {
+            /* 节奏闸失败不影响请求 */
+          }
+          const res = await fetch(input, init)
+          // 熔断记录：2xx 清零；任何非 2xx（429/402/403/5xx）都是匿名端点的风险信号，累积。
+          if (res) {
+            if (res.status >= 200 && res.status < 300) gate.breaker.record(true)
+            else gate.breaker.record(false)
+          }
+          return res
         },
       }
     },
@@ -205,4 +258,4 @@ export const OvhFreePlugin = async ({ client } = {}, options = {}) => {
   return { auth: anonymousAuth(SPECS[3], options) }
 }
 
-export const _internal = { SPECS, ICON, modelsFromSnapshot, seedModels, anonymousAuth, specById }
+export const _internal = { SPECS, ICON, modelsFromSnapshot, seedModels, anonymousAuth, specById, paceConfig, riskGateResponse }

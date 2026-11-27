@@ -14,6 +14,36 @@
 
 三个端点都不校验 `Authorization`，插件用占位 key `anonymous`。
 
+## 防限流（0.5.0，移植自 magpie-marvis 0.8 的风控体系）
+
+四个端点都是**匿名、按出口 IP 计费/限流**（kilo ~200/hr、pollinations ≥45s+≤100/day、OVH ~2 RPM）。旧 loader 是裸 `fetch`，一连串请求直接把 IP 干进冷却 → 界面刷出一片 429/402。本插件现在每个端点两层防线（`risk.mjs`）：
+
+| 层 | 机制 | 端点节奏 |
+|---|---|---|
+| **节奏闸**（`createPacing`） | 出网前按端点拉开最小间隔 + 随机抖动，尊重各端点的硬性 per-IP 规则 | `kilo` 3000+1000ms、`llm7` 1500+500ms、`pollinations` **45000+5000ms**（≥45s 硬规则）、`ovh` 30000+5000ms（~2 RPM） |
+| **端点级熔断**（`createBreaker`） | 端点连续非预期失败（默认 3 次）→ 本地 **fail-fast**（合成 429 带 retry-after，不再让 magpie 宿主连试 7 次），指数退避（1min→8h，+10% jitter），半开探测，状态落盘 `<稳定目录>/breaker-state.json` | 默认开 |
+| **跨端点共因闸** | 窗口内（10min）多个不同端点先后被拦 → 判定拦的是出口 IP → 整个池短暂暂停 | 默认开 |
+
+稳定目录：环境变量 `FREEPOOL_RISK_DIR`（默认 `~/.magpie-free-pool`）。熔断/节奏参数全部可用环境变量覆盖：
+
+```text
+FREEPOOL_PACE_MIN_MS        全局默认最小间隔（800）
+FREEPOOL_PACE_JITTER_MS     全局默认抖动（400；0 = 关）
+FREEPOOL_RISK_THRESHOLD     连续失败阈值（默认 3）
+FREEPOOL_RISK_COOLDOWN_MS   退避基准（默认 60000 = 1min；0 = 禁用熔断）
+FREEPOOL_RISK_CONSENSUS     共因判定需几个不同端点被拦（默认 2；0 = 关）
+FREEPOOL_RISK_WINDOW_MS     共因判定窗口（默认 600000 = 10min）
+```
+
+诊断：
+```js
+import { breakerBuckets, riskEvents, resetAllBreakers } from "./risk.mjs"
+breakerBuckets()   // 每个端点桶的 failures / 冷却剩余
+riskEvents()       // 近 50 条熔断事件
+resetAllBreakers() // 手动解除所有冷却
+```
+
+
 ### OVH 默认关闭
 
 `ovh-free` 从 2026-11-27 起匿名调用返回 **403 authentication failed**，要求自备 OAuth token（`https://kepler.ai.cloud.ovh.net/v1/oauth/ovh/authorize`）。纯匿名已不可用，所以**默认不注册**，避免在 magpie 里点到就报错。
